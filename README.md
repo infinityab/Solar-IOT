@@ -1,18 +1,15 @@
-rasptimer
+Rasptimer - Solar Timer Scheduler
 =========
 
 Use Raspberry Pi as a schedulable timer for GPIO hardware, configurable over the web.
 
-This is the software for the pool timer project described at
-http://upon2020.com/blog/2012/12/my-raspberry-pi-pool-timer-why/
+This is the software for the pool timer project conceived by Johannes Ernst and described at http://upon2020.com/blog/2012/12/my-raspberry-pi-pool-timer-why/ and Alan Stead later additions with further additions in this version to make it a fully fledged multi-schedule timer for currently 6 different appliances/devices which may be increased or decreased as required. 
 
 This should run on any Linux-based OS, although installation instructions
 were written for raspbian. You just need Apache, PHP, and WiringPi.
 
 You can schedule devices connected to any GPIO pin to be on and off at
-an arbitrary time but once a day. You can also manually switch the devices
-on and off. There is a textual log, and graphical log. See also
-directory screenshots/.
+an arbitrary time four times a day. Individual days are also programmable. You can also manually switch the devices on and off. There is a textual log, and graphical log. See also directory screenshots/.
 
 Installation:
 
