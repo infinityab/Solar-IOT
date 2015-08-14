@@ -7,11 +7,20 @@
 <div style="background-color:lightgreen;font-family:verdana,georgia,garamond,serif;text-align:center">
 <p><h3>Solar Scheduler</h3></p></div>
 <style type="text/css">
+p.ex1 {
+    font: bold 22px verdana, arial, sans-serif;
+}
+
+p.ex2 {
+    font: 18px verdana, Georgia, serif;
+}
+p.ex3 {
+    font: 15px serif;
+}
+
 body{overflow:hidden;}
 </style>
-<p style="font-family:verdana,georgia,garamond,serif;">
-<p style="font-size:medium;"></p></style>
-The timer scheduler consists of two parts, the <b>Schedule</b> menu which determines the on/off times and
+<p class="ex2">The timer scheduler consists of two parts, the <b>Schedule</b> menu which determines the on/off times and
 the <b>Configure</b> menu which provides additional conditions such as Exclusive, Suspend, Day-of-Week, Cloud etc.
 <p class="ex2"><b>FUNCTIONS</b><br>
 <b>Change Schedule</b> - used to set up the various schedule times or to switch off a scheduled appliance.
@@ -29,7 +38,7 @@ if any other remaining schedules <u>are</u> required then just re-enter one of t
 <li><p class="ex2">Preferably leave the timer on the Home/Front page as it provides an additional nudge to the scheduler at zero hour.</li>
 <li><p class="ex2">The scheduler relies on regular schedules to start and finish to nudge the schedules along and as time creeps on eventually there will only 
 be one left to run, it is this last one that will finally nudge all the schedules for the next days run.</li>
-<br><a href="<?= $baseUrl ?>/help2.php" onclick="javascript:void window.open(
+not woking properly yet = hit F5 to resize<a href="<?= $baseUrl ?>/help2.php" onclick="javascript:void window.open(
    '<?=$baseUrl."/rasptimer/help2.php"?>','1439010501199','width=1100,height=850,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');
           return false;"><div align="right">...hardware</div></a>
 
