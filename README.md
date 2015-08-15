@@ -11,7 +11,7 @@ were written for raspbian. You just need Apache, PHP, and WiringPi.
 You can schedule devices connected to any GPIO pin to be on and off at
 an arbitrary time four times a day. Individual days are also programmable. A low light detector may be connected to Wiring pin0 to use the cloud facility. Devices/appliances may also be manually switched on and off and the timers may be nudged or bumped in 15 minute steps if required or even suspended from running. There is a textual log, and graphical log. See also directory screenshots/.
 
-The Pi header pins are buffered and inverted with a standard 74HFC04 inverter and then fed into one or two optically isolated 4 x relay module board thus providing 4-8 240V/110V AC switchable outlets which in turn can directly drive appliances or trigger contactors. See directory hardware/. 
+The Pi header pins are buffered and inverted with a standard 74HFC04 inverter and then fed into one or two optically isolated 4 x relay module board thus providing 4-8 240V/110V AC switchable outlets which in turn can directly drive appliances or trigger contactors. Beware that ratings quoted on relays are for resistive loads, inductive loads will be about a quarter of that. See directory hardware/. 
 
 WiFi AC sockets (software under development) may also be triggered anywhere in the premises or within a max. 30m range. 
 
