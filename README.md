@@ -3,17 +3,17 @@ Rasptimer - Solar Timer Scheduler
 
 Use Raspberry Pi as a schedulable timer for GPIO hardware, configurable over the web.
 
-This is the software for the original pool timer project conceived by Johannes Ernst and described at http://upon2020.com/blog/2012/12/my-raspberry-pi-pool-timer-why/ and Alan Stead's later additions with further additions in this version to make it a fully fledged multi-schedule timer for currently 6 different appliances/devices which may be increased or decreased as required. No changes have been made to any of the log or graphic functions.
+This is uses the core software for the original pool timer project conceived by Johannes Ernst and described at http://upon2020.com/blog/2012/12/my-raspberry-pi-pool-timer-why/ and Alan Stead's later additions with further additions in this version to make it a fully fledged multi-schedule timer for currently 6 different appliances/devices which may be increased or decreased as required. No changes have been made to any of the log or graphic functions.
 
 This should run on any Linux-based OS, although installation instructions
 were written for raspbian. You just need Apache, PHP, and WiringPi.
 
 You can schedule devices connected to any GPIO pin to be on and off at
-an arbitrary time four times a day. Individual days are also programmable. A low light detector may be connected to Wiring pin0 to use the cloud facility. Devices/appliances may also be manually switched on and off and the timers may be nudged or bumped in 15 minute steps if required or even suspended from running. There is a textual log, and graphical log. See also directory screenshots/.
+an arbitrary time at four different times throughout a day. Individual days are also programmable. A low light detector may be connected to Wiring pin0 to use the cloud facility. Devices/appliances may also be manually switched on and off and the timers may also be nudged or bumped in 15 minute steps if required or even suspended from running. There is a textual log, and graphical log. See also directory screenshots/.
 
-The Pi header pins are buffered and inverted with a standard 74HFC04 inverter and then fed into one or two optically isolated 4 x relay module board thus providing 4-8 240V/110V AC switchable outlets which in turn can directly drive appliances or trigger contactors. Beware that ratings quoted on relays are for resistive loads, inductive loads will be about a quarter of that. See directory hardware/. 
+The Pi header pins are buffered and inverted with a standard 7404 or open collector inverter and then fed into one or two optically isolated 4 x relay module boards thus providing 4-8 240V/110V AC switchable outlets which in turn can directly drive appliances or trigger contactors. Be aware that ratings quoted on relays are for resistive loads, inductive loads will be about a quarter of that. See directory hardware/. 
 
-WiFi AC sockets (software under development) may also be triggered anywhere in the premises or within a max. 30m range. 
+Wireless driven AC sockets (Pi software under development) may also be triggered anywhere in the premises or within a max. 30m range. 
 
 First install Raspbian and wifi network drivers if required - see Raspberry Pi site for details, PUTTY may also be useful to access Pi remotely. Then -
 
@@ -35,8 +35,8 @@ Installation:
     chown www-data /var/log/rasptimer.log, config.php and config2.php
     sudo echo www-data > /etc/at.allow
 
-then enter your Raspberry Pi input/output configuration by editing
-    vi rasptimer/config.php and the schedules /rasptimer/config2.php - you should just have to set names and your timer program entries will do the rest
+then using vi or nano enter your Raspberry Pi input/output configuration by editing
+    vi rasptimer/config.php and the schedules /rasptimer/config2.php - you should just have to set names and pins you want to use and your timer program entries will do the rest
 
 then visit
 
@@ -46,6 +46,7 @@ then visit
 You may need to change to local time so to set up the UTC time zone e.g. :-
 
 $ ln -sf /usr/share/zoneinfo/Australia/Sydney /etc/localtime 
+
 To add a password to the website use vi or nano editor:
 
     sudo vi /etc/apache2/sites-enabled/000-default 
