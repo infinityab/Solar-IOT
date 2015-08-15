@@ -42,6 +42,7 @@ then visit
 You may need to change to local time so to set up the UTC time zone e.g. :-
 
 $ ln -sf /usr/share/zoneinfo/Australia/Sydney /etc/localtime 
+
 To add a password to the website use vi or nano editor:
 
     sudo vi /etc/apache2/sites-enabled/000-default 
