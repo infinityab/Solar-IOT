@@ -57,7 +57,6 @@ To enable weekly log rotation:
 
 The pin numbers on the Pi as described and used in the config files are the Wiring Pi pin numbers not the Pi header pin numbers, here is a cross reference header chart as used on the Pi for the 26 pin header
 
- 
 HD	Wi	GP	 Name   	   
 11	0	17	 GPIO 0 	   
 12	1	18	 GPIO 1 	   
