@@ -30,7 +30,7 @@ Installation:
     make
     sudo make install
     cd /var/www
-    sudo git clone https://github.com/infinityab/Rasptimer---Solar-Timer-Scheduler.git rasptimer
+    sudo git clone https://github.com/infinityab/Rasptimer-Solar-Timer-Scheduler.git rasptimer
     touch /var/log/rasptimer.log
     chown www-data /var/log/rasptimer.log, config.php and config2.php
     sudo echo www-data > /etc/at.allow
