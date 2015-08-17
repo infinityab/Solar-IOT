@@ -1,7 +1,10 @@
 
  <!--- <meta http-equiv="refresh" content="10" > -->
-<h2>Current Schedule :</h2>
-<?php require( 'emit-current-time.php' );?>
+
+<?php
+    require( 'emit-current-time.php' );
+    $powerAvailable = getSmaPower();
+?>  <h2>Current Schedule & Current Power : <? print substr($powerAvailable,15); ?> </h2>
 
   <form method="GET">
   <table class="schedule">

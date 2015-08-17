@@ -78,7 +78,10 @@
 </tr>
    </table>
 <?php
-require( 'emit-current-time.php' );
-?>
+    require( 'emit-current-time.php' );
+    $powerAvailable = getSmaPower();
+?>  <h3>Current Schedule : <? print ($devicePin[2]+1)?><h3>
+    <h3>Solar Power Available : <? print substr($powerAvailable,15); ?> </h3>
+
   </form>
 

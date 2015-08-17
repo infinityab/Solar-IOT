@@ -25,6 +25,25 @@ function arrayCopy( array $array ) {
         return $result;
 }
 
+function getSmaPower() {
+
+    $source = "/home/pi/sbfspot.log";   // get the current solar power available
+    $handle = fopen($source, 'r');
+    if ($handle) {
+        while (($line = fgets($handle)) !== false) {
+            if (substr($line,1,5) == 'Total') {
+                       $powerNow = $line;
+            }
+        }
+    }   else {
+        // error opening the file.
+    }
+    fclose($handle);
+    unlink($source);
+    return $powerNow;
+    }
+
+
 function checkSchedules(array $nextSchedule ) {
 
     global $schedules;
