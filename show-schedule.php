@@ -1,11 +1,8 @@
-
- <!--- <meta http-equiv="refresh" content="10" > -->
+ <!--- <meta http-equiv="refresh" content="15" > -->
 
 <?php
-    require( 'emit-current-time.php' );
-    $powerAvailable = getSmaPower();
-?>  <h2>Current Schedule & Current Power : <? print substr($powerAvailable,15); ?> </h2>
-
+    print ("<b>Current Schedule & Current Power : " . substr( $powerAvailable = getSmaPower(),15))."</b>" ;
+    print (" . . . " ); require( 'emit-current-time.php' ); ?><p></p>
   <form method="GET">
   <table class="schedule">
 <?php
