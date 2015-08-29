@@ -1,13 +1,15 @@
-  <h2>Current Devices:</h2>
+<h2>Current Devices:</h2>
 
   <form method="POST">
    <table class="status">
     <tr>
       <th align="left">Name</th>
       <th>Pin</th>
+      <th>Status</th>
       <th>Schedule Num</th>
-      <th>Exclusive</th>
-      <th>Suspend</th>
+      <th>Power<br>Target</th>
+      <th>Priority</th>
+      <th>Susp</th>
       <th>Cloud</th>
       <th>Mon</th>
       <th>Tue</th>
@@ -24,8 +26,19 @@
     foreach( $devices as $deviceName => $devicePin ) {
 ?>
      <th align="left"><?php print( $deviceName ) ?></th>
-     <td><?php print( $devicePin[0] ) ?></td>
-<?php
+     <td><?php print( $devicePin[0] ) ?> </th>
+<?
+        $deviceStatus = runGpio( "read", $devicePin[0] );
+?>
+     <td>
+<?
+        print( $deviceStatus ? "<font color='red'>On</font>" : "<font color='blue'>Off</font>" );
+?>
+     </td>
+
+
+
+<?
         if ( $devices[$firstKey][0] == $devicePin[0]) {
 ?>
 <td>
@@ -43,27 +56,33 @@
 <?php
  }
 ?>
-<td>
-        <input type="checkbox" name="<?php print($devicePin[0]) ?>-Exclude" <?= $devicePin[1]==1 ? "checked":""?> onclick="this.form.submit()">
-     </td>
-<td>
-	<input type="checkbox" name="<?php print($devicePin[0]) ?>-Suspend" <?= $devicePin[4+($devicePin[2] * 10)]==1 ? "checked":""?> /> <!-- onclick="this.form.submit()"/> -->
+    <td>
+     <input type="text" size="4" maxlength="4" max="4000" name="<?php print( $devicePin[0] ) ?>-Power" value="<?        // set power target
+         printf(isset ($devicePin[3 +($devicePin[2] * 10)]) ? $devicePin[3 +($devicePin[2] * 10)] : 0);?>" />
+    </td><td>
+     <input type="text" size="1" maxlength="1" max="3" name="<?php print( $devicePin[0] ) ?>-Exclude" value="<?        // set priority
+         printf( "%1d",isset ($devicePin[1]) ? $devicePin[1] : 0);?>" />
+
+
+<!--    <input type="checkbox" name="<?php print($devicePin[0]) ?>-Exclude" <?= $devicePin[1]==1 ? "checked":""?>> -->
      </td><td>
-	<input type="checkbox" name="<?php print($devicePin[0]) ?>-Cloud" <?= $devicePin[5+($devicePin[2] * 10)]==1 ? "checked":""?> /> <!-- onclick="this.form.submit()"/> -->
+	<input type="checkbox" name="<?php print($devicePin[0]) ?>-Suspend" <?= $devicePin[4+($devicePin[2] * 10)]==1 ? "checked":""?> />
      </td><td>
-	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowMon" <?= $devicePin[6+($devicePin[2] * 10)]==1? "checked":""?> /> <!-- onclick="this.form.submit()"/> -->
+	<input type="checkbox" name="<?php print($devicePin[0]) ?>-Cloud" <?= $devicePin[5+($devicePin[2] * 10)]==1 ? "checked":""?> />
      </td><td>
-	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowTue" <?= $devicePin[7+($devicePin[2] * 10)]==1 ? "checked":""?> /> <!-- onclick="this.form.submit()"/> -->
+	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowMon" <?= $devicePin[6+($devicePin[2] * 10)]==1? "checked":""?> />
      </td><td>
-	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowWed" <?= $devicePin[8+($devicePin[2] * 10)]==1 ? "checked":""?> /> <!-- onclick="this.form.submit()"/> -->
+	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowTue" <?= $devicePin[7+($devicePin[2] * 10)]==1 ? "checked":""?> />
      </td><td>
-	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowThu" <?= $devicePin[9+($devicePin[2] * 10)]==1 ? "checked":""?> /> <!-- onclick="this.form.submit()"/> -->
+	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowWed" <?= $devicePin[8+($devicePin[2] * 10)]==1 ? "checked":""?> />
      </td><td>
-	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowFri" <?= $devicePin[10+($devicePin[2] * 10)]==1 ? "checked":""?> /> <!-- onclick="this.form.submit()"/> -->
+	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowThu" <?= $devicePin[9+($devicePin[2] * 10)]==1 ? "checked":""?> />
      </td><td>
-	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowSat" <?= $devicePin[11+($devicePin[2] * 10)]==1 ? "checked":""?> /> <!-- onclick="this.form.submit()"/> -->
+	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowFri" <?= $devicePin[10+($devicePin[2] * 10)]==1 ? "checked":""?> />
      </td><td>
-	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowSun" <?= $devicePin[12+($devicePin[2] * 10)]==1 ? "checked":""?> /> <!-- onclick="this.form.submit()"/> -->
+	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowSat" <?= $devicePin[11+($devicePin[2] * 10)]==1 ? "checked":""?> />
+     </td><td>
+	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowSun" <?= $devicePin[12+($devicePin[2] * 10)]==1 ? "checked":""?> />
      </td>
 </tr>
 <?php
@@ -77,11 +96,13 @@
 </td>
 </tr>
    </table>
+<p>
 <?php
     require( 'emit-current-time.php' );
-    $powerAvailable = getSmaPower();
+    $poweravailable = getSmaPower();
 ?>  <h3>Current Schedule : <? print ($devicePin[2]+1)?><h3>
-    <h3>Solar Power Available : <? print substr($powerAvailable,15); ?> </h3>
-
+    <h3>Solar Power Available : <? print $poweravailable."kWs" ?> </h3>
+    Power Reserve : <? print $powerReserve . " Watts"; ?>
+<?  checkPowerTargets($poweravailable*1000); ?>
   </form>
 

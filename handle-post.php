@@ -27,6 +27,7 @@
 	    $rewrite_config = True;
     	}
     }
+
     if ($rewrite_config) {
 	$source = "config.php";
 	$target = "configbkup.php";
@@ -46,6 +47,7 @@
 			foreach( $devices as $deviceName => $devicePin ) {
 
     		   $dummy = 0;                                          // dummy is spare a bit
+               $power = $_POST['powerTarget'];
 			   $ExcludePar = $devicePin[0] . '-Exclude';            // Exclusive/Exclude same thing
 			   $SchedulePar = $devicePin[0] . '-ScheduleConf';    // last schedule to be configured
                $SuspendPar = $devicePin[0] . '-Suspend';
@@ -61,8 +63,12 @@
 			   fwrite($handle_out, "    \"" . 
 		           $deviceName . "\" => array(" . 
 					$devicePin[0].",");					// device pin 0 - Gpio pin number
-			   fwrite($handle_out, ($_POST[$ExcludePar]=="on"?"1":"0").",");
-
+               if ($_POST[$devicePin[0]."-Exclude"] == "") {        // Exclusive Priority
+                     fwrite($handle_out, (0).",");
+                    } else {
+                    fwrite($handle_out, ($_POST[$devicePin[0]."-Exclude"]).",");         # device pin 1 Exclusive Priority
+                    }
+//			   fwrite($handle_out, ($_POST[$ExcludePar]=="on"?"1":"0").",");
 			   if( isset( $_POST[$SchedulePar] ) && $_POST[$SchedulePar] != $devicePin[2] ) {   //  schedule to be  set
 				fwrite($handle_out, $SchedPost.",");  // $_POST[$SchedulePar].",");
 			   } else {
@@ -70,7 +76,11 @@
 			   }
 // Schedule 1
                if (($SchedPost == 0) && ($configSubmit)) {                          // update DOW etc. config according to settings
-    			   fwrite($handle_out, ($dummy).",");					                # device pin 3 spare
+                   if ($_POST[$devicePin[0]."-Power"] == "") {
+                     fwrite($handle_out, (0).",");
+                    } else {
+                    fwrite($handle_out, ($_POST[$devicePin[0]."-Power"]).",");                                   # device pin 3  power target
+                    }
 	    		   fwrite($handle_out, ($_POST[$SuspendPar]=="on"?"1":"0").",");	    # Suspend device pin 4
 		    	   fwrite($handle_out, ($_POST[$CloudPar]=="on"?"1":"0").",");		    # Cloud device pin 5
                    fwrite($handle_out, ($_POST[$DowMon]=="on"?"1":"0").",");            # device pin 6 S1 Mon - Day 1
@@ -87,7 +97,11 @@
   			    }
 // Schedule 2
                if (($SchedPost == 1) && ($configSubmit)) {
-                           fwrite($handle_out,($dummy).",");                                    # S2 device pin 13 spare - ex-wind
+                   if ($_POST[$devicePin[0]."-Power"] == "") {
+                     fwrite($handle_out, (0).",");
+                    } else {
+                    fwrite($handle_out, ($_POST[$devicePin[0]."-Power"]).",");                                   # device pi$
+                    }
                            fwrite($handle_out, ($_POST[$SuspendPar]=="on"?"1":"0").",");        # S2 Suspend device pin 14
                            fwrite($handle_out, ($_POST[$CloudPar]=="on"?"1":"0").",");          # S2 Cloud device pin 15
                            fwrite($handle_out, ($_POST[$DowMon]=="on"?"1":"0").",");            # S2 device pin 16  Mon - Day 1
@@ -103,8 +117,12 @@
                     }
                 }
 // Schedule 3
-                           if (($SchedPost == 2) && ($configSubmit)) {
-                           fwrite($handle_out,($dummy).",");                                    # device pin 23 spare - ex-wind
+                if (($SchedPost == 2) && ($configSubmit)) {
+                   if ($_POST[$devicePin[0]."-Power"] == "") {
+                     fwrite($handle_out, (0).",");
+                    } else {
+                    fwrite($handle_out, ($_POST[$devicePin[0]."-Power"]).",");                                   # device pi$
+                    }
                            fwrite($handle_out, ($_POST[$SuspendPar]=="on"?"1":"0").",");        # Suspend device pin 24
                            fwrite($handle_out, ($_POST[$CloudPar]=="on"?"1":"0").",");          # Cloud device pin 25
                            fwrite($handle_out, ($_POST[$DowMon]=="on"?"1":"0").",");            # device pin 26 S2 Mon - Day 1
@@ -121,7 +139,11 @@
                 }
 // Schedule 4
                            if (($SchedPost == 3) && ($configSubmit)) {
-                           fwrite($handle_out,($dummy).",");                                    # device pin 33 spare - ex-wind
+                   if ($_POST[$devicePin[0]."-Power"] == "") {
+                     fwrite($handle_out, (0).",");
+                    } else {
+                    fwrite($handle_out, ($_POST[$devicePin[0]."-Power"]).",");                                   # device pi$
+                    }
                            fwrite($handle_out, ($_POST[$SuspendPar]=="on"?"1":"0").",");        # Suspend device pin 34
                            fwrite($handle_out, ($_POST[$CloudPar]=="on"?"1":"0").",");          # Cloud device pin 35
                            fwrite($handle_out, ($_POST[$DowMon]=="on"?"1":"0").",");            # device pin 36 S2 Mon - Day 1
@@ -167,9 +189,9 @@
     if( isset( $_POST['change-schedule'] ) && $_POST['change-schedule'] == 'Save' ) {
         $schedule = readCrontab();			                // get the current schedule
         $schedDevName = $deviceName = $_POST['deviceName'];		// find out which one is to change
-	$scheduleSave = True;
-   if( isset( $devices[$deviceName] )) {
-            if( $_POST['scheduled'] == 'yes' ) {	// run regularly or not
+    	$scheduleSave = True;
+           if( isset( $devices[$deviceName] )) {
+                if( $_POST['scheduled'] == 'yes' ) {	// run regularly or not
 
 function rangeCheck( $val, $min, $max ) {
     $val = intval( $val );

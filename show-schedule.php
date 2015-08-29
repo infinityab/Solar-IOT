@@ -1,8 +1,15 @@
  <!--- <meta http-equiv="refresh" content="15" > -->
 
 <?php
-    print ("<b>Current Schedule & Current Power : " . substr( $powerAvailable = getSmaPower(),15))."</b>" ;
-    print (" . . . " ); require( 'emit-current-time.php' ); ?><p></p>
+    $poweravailable = getSmaPower();
+    print "<b>Current Schedule & Current Power : " . $poweravailable."kWs </b> ~  Power Reserve : " . $powerReserve . " Watts" ;
+    print (" ~ " ); require( 'emit-current-time.php' ); ?><p></p>
+<?  if( $oldpower <> $poweravailable) {
+        $oldpower = $poweravailable;
+        checkPowerTargets($poweravailable*1000);
+    }
+?>
+
   <form method="GET">
   <table class="schedule">
 <?php
@@ -29,17 +36,14 @@
             print "not scheduled";
         }
 ?>
-     </td>
-     <td>
+     </td><td>
       <input type="submit" name="<?php print( $deviceName ) ?>Action" value="Change schedule" />
-     </td>
-     <td>
+     </td><td>
       <input type="submit" name="<?php print( $deviceName ) ?>Action" value="+Bump" />
-     </td>
-     <td>
+     </td><td>
       <input type="submit" name="<?php print( $deviceName ) ?>Action" value="-Bump" />
-    </td>
-<?php
+    </td><td>
+<?
 }
 ?>
     </tr>

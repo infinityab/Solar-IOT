@@ -1,9 +1,9 @@
   <meta http-equiv="refresh" content="10" >
-  <h2>Current status:</h2>
+  <h2>Current status: </h2>
   <form method="POST">
    <table class="status">
 
-<tr> <td> </td> <td> </td> <td> </td> <td> </td>
+<tr> <td> </td> <td> <b>Sta</td> <td><b>Pr</td> <td><b>Pwr</td><td> </td><td> </td>
      <th>Schedule 1</th>
      <th>Schedule 2</th>
      <th>Schedule 3</th>
@@ -14,13 +14,21 @@
         $deviceStatus = runGpio( "read", $devicePin[0] );
 ?>
      <tr>
-     <th><?php print( $deviceName ) ?> is:</th>
+     <th><?php print( $deviceName ) ?></th>
      <td>
 <?php
-        print( $deviceStatus ? "on" : "off" );
+        print( $deviceStatus ? "<font color='red'>On</font>" : "<font color='blue'>Off</font>" );
 ?>
-     </td>
-     <td>
+     </td><td>
+<?
+        print $devicePin[1];        // Priority
+?>
+     </td><td>
+<?
+        print $devicePin[3];        // power requirement
+?>
+    </td><td>
+
       <input type="submit" name="<?php print( $deviceName ) ?>Action" value="<?php print( $deviceStatus ? "Turn off" : "Turn on" ) ?>"/>
      </td>
      <td>
@@ -29,7 +37,7 @@
 ?>
       for
       <select name="<?php print( $deviceName ) ?>Duration">
-       <option value="0">Until I turn it off</option>
+       <option value="0">Manual</option>
        <option value="5">5 min</option>
        <option value="15">15 min</option>
        <option value="30">30 min</option>
