@@ -1,4 +1,5 @@
-  <meta http-equiv="refresh" content="10" >
+  <meta http-equiv="refresh" content="17">
+
   <h2>Current status: </h2>
   <form method="POST">
    <table class="status">

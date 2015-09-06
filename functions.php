@@ -27,12 +27,14 @@ function arrayCopy( array $array ) {
 
 function getSmaPower() {
 
+ global $powerReserve;
+
     $source = "/home/pi/sbfspot.log";   // get the current solar power available
     $handle = fopen($source, 'r');
     if ($handle) {
         while (($line = fgets($handle)) !== false) {
             if (substr($line,1,5) == 'Total') {
-                       $powerNow = substr($line,15,-3);
+                       $powerNow = substr($line,15,-3);     // strip out the bits we don't want
             }
         }
     }   else {
@@ -48,9 +50,9 @@ function checkPowerTargets($currentpower) {
     global $devices;
 
     require( 'config.php');
-    $currentpower -= $powerReserve;
+    $currentpower -= $powerReserve;     // first deduct any power reserve (for fridges, computer equip  etc)
     $prioritylog = array();
-    $devicelog = array();
+    $devicelog = array();               // reset everything
     $totp = 0;
     $totd = 0;
     $devicepower = 0;
@@ -59,24 +61,20 @@ function checkPowerTargets($currentpower) {
         $status = NULL;
         $out = NULL;
         $pin = $devicePin[0];
-        exec( "/usr/local/bin/gpio mode $pin out", $out, $status );
-        $status = NULL;
-        $out    = NULL;
-
-        exec( "/usr/local/bin/gpio read $pin", $out, $status );
+        exec( "/usr/local/bin/gpio read $pin", $out, $status );     // check whether device active
         if ($out[0]) {
           if(!$devicePin[1]) {            // ie NOT a priority device
-                $devicepower += $devicePin[3];
-                $devicelog[$totd][0] = $devicePin[0];   // Device Pin number
+                $devicepower += $devicePin[3];          // build devices ON list
+                $devicelog[$totd][0] = $devicePin[0];   // Device Wiring Pin number
                 $devicelog[$totd][1] = $devicePin[3];   // Power Requirement
                 ++$totd;
             }
         }
-        if($devicePin[1]) {
+        if($devicePin[1]) {                             // build priority 1 & 2 devices list
             $prioritypower += $devicePin[3];
-            $prioritylog[$totp][0] = $devicePin[0];   // Device Pin number
+            $prioritylog[$totp][0] = $devicePin[3];   // Power requirement
             $prioritylog[$totp][1] = $devicePin[1];   // Priority setting
-            $prioritylog[$totp][2] = $devicePin[3];   // Power Requirement
+            $prioritylog[$totp][2] = $devicePin[0];   // Pin number
             ++$totp;
         }
     }
@@ -84,34 +82,49 @@ function checkPowerTargets($currentpower) {
 // Priority 1 is any bonus dev such as heating or cooling - Priority 2 is a dev that has a timer function as well - such as water heater - the water heater is ..
 // a special case as it will also have a feedback indicating it's thermo state - i.e. hot enough, thermostat OFF
 // 1 record ALL current devices that do NOT have priority and are switched ON - record any prioriy ON - if ANY priority set > NO > RETURN
-// 2 is there surplus power > NO > check if power deficit is within param set (-10%?) NO > switch OFF priority dev and update records > RETURN
+// 2 is there surplus power > NO > check if power tolerance is within param set (-10%?) NO > switch OFF priority dev and update records > RETURN
 // 4 Check is any priority fits surplus power pick the BIGGEST power need first check if more can fit AND SWITCH ON - record which ones are on > NO > RETURN
-// 5 IF priority 2 dev hot water check if hot enough if so DO NOT switch on
-// 5 cross check old prioritys with new prioritys and switch OFF any mismatch *** care with priority 2  hot water??- copy new array to old array
+// 5 IF priority 2 dev hot water check thermostat feedback if hot enough if so DO NOT switch on
+// 5 cross check old prioritys with new prioritys and switch OFF any mismatch *** care with priority 2  hot water??- copy new array to old array?
 
-   if(!$prioritylog[0][0]) return;    // no priority set
+    if(!$prioritylog[0][0]) return;    // no priority set
+    rsort($prioritylog);        // reorder prioitys with highest power first and priority as last choice
     $currentpower -= $devicepower;
-    if( $currentpower <= 0 ) {
+    if( $currentpower <= 0 ) {          // calculate power suplus if any
         $y = count($prioritylog);
         if ($y) {
             for($x = 0; $x < $y; ++$x) {        // scan through prioritys
-                $pin =  $prioritylog[$x][0];
+                $pin =  $prioritylog[$x][2];
                 exec( "/usr/local/bin/gpio write $pin 0");       // switch OFF all priority devices - no more power
             }
         }
     return;
     }
     $y = count($prioritylog);
+//var_dump($prioritylog);
     if ($y) {
-        for($x = 0; $x < $y; ++$x) {        // scan through prioritys
-            $pin =  $prioritylog[$x][0];
-            if($currentpower - $prioritylog[$x][2] > 0) {
-                $currentpower -= $prioritylog[$x][2];
-                exec( "/usr/local/bin/gpio write $pin 1");       // switch on device
-                $devicelog[count($devicelog)][0] = $prioritylog[$x][0];     // update $device list to include prioritys
-                $devicelog[count($devicelog)][0] = $prioritylog[$x][1];
-            } else {
-                exec( "/usr/local/bin/gpio write $pin 0");      // make sure device is switched OFF
+        for($x = 0; $x < $y; ++$x) {        // scan through prioritys ( yes I DO know how to spell priorities)
+            $pin =  $prioritylog[$x][2];
+            if( $prioritylog[$x][1] == 1) {
+                if($currentpower - $prioritylog[$x][0] > 0) {
+                    $currentpower -= $prioritylog[$x][0];
+                    exec( "/usr/local/bin/gpio write $pin 1");       // switch on device
+                    $devicelog[count($devicelog)][0] = $prioritylog[$x][2];     // update $device list to include required priority 1 devices
+                } else {
+                    exec( "/usr/local/bin/gpio write $pin 0");      // make sure device is switched OFF
+                }
+            }
+        }
+        for($x = 0; $x < $y; ++$x) {        // scan through prioritys ( yes I DO know how to spell priorities)
+            $pin =  $prioritylog[$x][2];
+            if( $prioritylog[$x][1] == 2) {
+                if($currentpower - $prioritylog[$x][0] > 0) {
+                    $currentpower -= $prioritylog[$x][0];
+                    exec( "/usr/local/bin/gpio write $pin 1");       // switch on device
+                    $devicelog[count($devicelog)][0] = $prioritylog[$x][2];     // update $device list to include required priority 2 devices
+                } else {
+                    exec( "/usr/local/bin/gpio write $pin 0");      // make sure device is switched OFF
+                }
             }
         }
     }
@@ -119,11 +132,11 @@ function checkPowerTargets($currentpower) {
         $deviceOn = 0;
         $y = count($devicelog);
         if ($y) {
-            for($x = 0; $x < $y; ++$x) {                // scan for devices that are not required
-                if($devicePin[0] == $devicelog[$x][0]) $deviceOn = 1;
+            for($x = 0; $x < $y; ++$x) {                // now scan for devices that are not required
+                if($devicePin[0] == $devicelog[$x][0]) $deviceOn = 1;       // check if in device list
             }
         }
-        if(!$deviceOn)  exec( "/usr/local/bin/gpio write $devicePin[0] 0");      // switch OFF device
+        if(!$deviceOn) exec( "/usr/local/bin/gpio write $devicePin[0] 0");      // switch OFF device
     }
 return;
 }

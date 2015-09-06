@@ -1,10 +1,11 @@
- <!--- <meta http-equiv="refresh" content="15" > -->
+<meta http-equiv="refresh" content="19">
 
 <?php
     $poweravailable = getSmaPower();
-    print "<b>Current Schedule & Current Power : " . $poweravailable."kWs </b> ~  Power Reserve : " . $powerReserve . " Watts" ;
+    if(!$poweravailable) $poweravailable = getSmaPower();      // try again if zero or null
+    print "<b>Current Schedule & Current Power : " . $poweravailable." kWs </b> ~  Power Reserve : " . $powerReserve . " Watts";
     print (" ~ " ); require( 'emit-current-time.php' ); ?><p></p>
-<?  if( $oldpower <> $poweravailable) {
+<?   if( $oldpower <> $poweravailable) {
         $oldpower = $poweravailable;
         checkPowerTargets($poweravailable*1000);
     }

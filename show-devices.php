@@ -35,9 +35,6 @@
         print( $deviceStatus ? "<font color='red'>On</font>" : "<font color='blue'>Off</font>" );
 ?>
      </td>
-
-
-
 <?
         if ( $devices[$firstKey][0] == $devicePin[0]) {
 ?>
@@ -102,7 +99,7 @@
     $poweravailable = getSmaPower();
 ?>  <h3>Current Schedule : <? print ($devicePin[2]+1)?><h3>
     <h3>Solar Power Available : <? print $poweravailable."kWs" ?> </h3>
-    Power Reserve : <? print $powerReserve . " Watts"; ?>
+    Enter Power Reserve : <input type="text" size="4" maxlength="4" name="powerreserve" value="<?php print(  $powerReserve ) ?>"/> Watts
 <?  checkPowerTargets($poweravailable*1000); ?>
   </form>
 

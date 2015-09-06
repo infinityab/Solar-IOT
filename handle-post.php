@@ -27,6 +27,7 @@
 	    $rewrite_config = True;
     	}
     }
+    $powerReserve = $_POST['powerreserve'];
 
     if ($rewrite_config) {
 	$source = "config.php";
@@ -46,7 +47,6 @@
 			}
 			foreach( $devices as $deviceName => $devicePin ) {
 
-    		   $dummy = 0;                                          // dummy is spare a bit
                $power = $_POST['powerTarget'];
 			   $ExcludePar = $devicePin[0] . '-Exclude';            // Exclusive/Exclude same thing
 			   $SchedulePar = $devicePin[0] . '-ScheduleConf';    // last schedule to be configured
@@ -68,11 +68,10 @@
                     } else {
                     fwrite($handle_out, ($_POST[$devicePin[0]."-Exclude"]).",");         # device pin 1 Exclusive Priority
                     }
-//			   fwrite($handle_out, ($_POST[$ExcludePar]=="on"?"1":"0").",");
 			   if( isset( $_POST[$SchedulePar] ) && $_POST[$SchedulePar] != $devicePin[2] ) {   //  schedule to be  set
-				fwrite($handle_out, $SchedPost.",");  // $_POST[$SchedulePar].",");
+				fwrite($handle_out, $SchedPost.",");
 			   } else {
-				fwrite($handle_out,$SchedPost.","); //($devicePin[2]).",");
+				fwrite($handle_out,$SchedPost.",");
 			   }
 // Schedule 1
                if (($SchedPost == 0) && ($configSubmit)) {                          // update DOW etc. config according to settings
@@ -163,10 +162,12 @@
 			}
 			fwrite($handle_out, $line);
 
-		} else {
-			fwrite($handle_out, $line);
-		}
-      }
+		} elseif (substr($line,0,13) == '$powerReserve') {
+                    fwrite($handle_out, "\$powerReserve = " . $powerReserve . ";\n");
+                } else {
+                    fwrite($handle_out, $line);
+		    }
+        }
 	} else {
 	    // error opening the file.
 	}
@@ -180,7 +181,7 @@
         if (!copy($file, $newfile)) {
             echo "failed to copy $file...\n";
       }
-        header( "Location: $baseUrl/configure.php" );
+    header( "Location: $baseUrl/configure.php" );
 	exit( 0 );
 }
 

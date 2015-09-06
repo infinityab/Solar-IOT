@@ -40,11 +40,11 @@ Installation:
 then using vi or nano enter your Raspberry Pi input/output configuration by editing
     vi rasptimer/config.php and the schedules /rasptimer/config2.php - you should just have to set names and pins you want to use and your timer program entries will do the rest
 
-If you have an SMA solar inverter installed and you are using SBFspot to gather the SMA data you can also display this and  apply it intelligently to the timer - to do so set up a 5 minute cron job - type sudo crontab -e     ...and then add the line
+If you have an SMA solar inverter installed and you are using SBFspot to gather the SMA data you can also display this and apply as auto power management to the timer - to do so set up a 5 minute cron job - type sudo crontab -e     ...and then add the line
 
 */5 * * * * /usr/local/bin/sbfspot.3/SBFspot -v -nocsv -nosql -finq | cut --complement -s -f79 > /home/pi/sbfspot.log
 
-This will generate a curtailed logfile which the data is extracted from for display
+This will generate a curtailed logfile which the instananeous inverter power data is extracted from for display.
 
  - then visit
 

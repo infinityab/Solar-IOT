@@ -9,15 +9,16 @@ $title = "Solar Timer Scheduler";
 //                            0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2
 //                            p,e,s,d,s,c,m,t,w,t,f,s,s,d,s,c,m,t,w,t,f,s,s,d,s,c,m,t,w,t,f,s,s,d,s,c,m,t,w,t,f,s,s
 $devices = array(
-    "Hot Water Main" => array(6,0,0,1500,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1),
+    "Hot Water Main" => array(6,2,0,300,0,0,1,1,1,1,1,1,1,300,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1),
     "Hot Water Boost" => array(5,0,0,200,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1),
-    "Pool Pump" => array(4,1,0,2500,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1),
-    "Enviro Pump" => array(10,1,0,200,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1),
-    "Heat-Aircon" => array(11,1,0,500,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1),
-    "Wireless Pwr1" => array(3,0,0,500,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1),
+    "Pool Pump" => array(4,1,0,400,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1),
+    "Enviro Pump" => array(10,1,0,400,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1),
+    "Heat-Aircon" => array(11,1,0,200,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1),
+    "Wireless Pwr1" => array(3,0,0,1200,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1),
 );
 
-$powerReserve = 300;        // power reserve used if using SMA Inverter in watts before any calculations are made
+$powerReserve = 320;
+                //  Power Reserve is deducted from the available solar power before any Priority calculations are made
 
 // Where to log events. This file must be writeable by the webserver user, e.g. "chown www-data /var/log/rasptimer.log"
 $logFile      = "/var/log/rasptimer.log";
