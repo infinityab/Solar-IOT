@@ -15,7 +15,7 @@ function emitHeader( $title ) {
   </div>
   <div class="tabs">
    <ul>
-    <li><a href="<?= $baseUrl ?>/">Front</a></li>
+    <li><a href="<?= $baseUrl ?>/">Home</a></li>
     <li><a href="<?= $baseUrl ?>/configure.php">Configure</a></li>
     <li><a href="<?= $baseUrl ?>/logs.php">Logs</a></li>
     <li><a href="<?= $baseUrl ?>/graphic-logs.php">Graphic logs</a></li>

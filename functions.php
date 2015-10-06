@@ -27,27 +27,43 @@ function arrayCopy( array $array ) {
 
 function getSmaPower() {
 
- global $powerReserve;
+ global $powerReserve,$powerNow;
 
     $source = "/home/pi/sbfspot.log";   // get the current solar power available
     $handle = fopen($source, 'r');
     if ($handle) {
         while (($line = fgets($handle)) !== false) {
             if (substr($line,1,5) == 'Total') {
-                       $powerNow = substr($line,15,-3);     // strip out the bits we don't want
+                $powerNow = substr($line,15,-3);     // strip out the bits we don't want
+                break; 
             }
         }
     }   else {
-        // error opening the file.
+      // error opening the file.
     }
     fclose($handle);
-    unlink($source);
-    return $powerNow;
+
+    if (!$powerNow) {        // try one more time
+        $handle = fopen($source, 'r');
+        if ($handle) {
+        while (($line = fgets($handle)) !== false) {
+            if (substr($line,1,5) == 'Total') {
+               $powerNow = substr($line,15,-3);
+                break;
+                }
+            }
+        }   else {
+            // error opening the file.
+        }
+        fclose($handle);
     }
+ return $powerNow;
+}
+
 
 function checkPowerTargets($currentpower) {
 
-    global $devices;
+    global $devices,$schedules,$hwsTsPin;
 
     require( 'config.php');
     $currentpower -= $powerReserve;     // first deduct any power reserve (for fridges, computer equip  etc)
@@ -57,74 +73,74 @@ function checkPowerTargets($currentpower) {
     $totd = 0;
     $devicepower = 0;
     $prioritypower = 0;
+    $timeNow = (date("H")*60) + date("i");      // get the current time in seconds
     foreach( $devices as $deviceName => $devicePin ) {      // first calculate power wattage left
         $status = NULL;
         $out = NULL;
         $pin = $devicePin[0];
         exec( "/usr/local/bin/gpio read $pin", $out, $status );     // check whether device active
         if ($out[0]) {
-          if(!$devicePin[1]) {            // ie NOT a priority device
+            if( !$devicePin[5] ) {                      // if false NOT a priority device
+                if( $hwsTsPin[0] == $pin ) {
+                  exec( "/usr/local/bin/gpio read $hwsTsPin[1]", $out, $status );     // check whether hws still active
+                    if( !$out ) {                               // Low when thermostat active
+                        $devicepower += $devicePin[3];          // build devices ON list
+                        $devicelog[$totd][0] = $devicePin[0];   // Device Wiring Pin number
+                        $devicelog[$totd][1] = $devicePin[3];   // Power Requirement
+                        ++$totd;
+                    }
+                } else
+                {
                 $devicepower += $devicePin[3];          // build devices ON list
                 $devicelog[$totd][0] = $devicePin[0];   // Device Wiring Pin number
                 $devicelog[$totd][1] = $devicePin[3];   // Power Requirement
                 ++$totd;
+                }
             }
         }
-        if($devicePin[1]) {                             // build priority 1 & 2 devices list
+        if( $devicePin[5]) {                          // if false NOT a priority device
             $prioritypower += $devicePin[3];
-            $prioritylog[$totp][0] = $devicePin[3];   // Power requirement
-            $prioritylog[$totp][1] = $devicePin[1];   // Priority setting
+            $prioritylog[$totp][0] = $devicePin[5];   // Priority setting
+            $prioritylog[$totp][1] = $devicePin[3];   // Power requirement
             $prioritylog[$totp][2] = $devicePin[0];   // Pin number
             ++$totp;
         }
     }
 
 // Priority 1 is any bonus dev such as heating or cooling - Priority 2 is a dev that has a timer function as well - such as water heater - the water heater is ..
-// a special case as it will also have a feedback indicating it's thermo state - i.e. hot enough, thermostat OFF
+// ...a special case as it will also have a feedback indicating it's thermo state - i.e. hot enough, thermostat OFF
 // 1 record ALL current devices that do NOT have priority and are switched ON - record any prioriy ON - if ANY priority set > NO > RETURN
 // 2 is there surplus power > NO > check if power tolerance is within param set (-10%?) NO > switch OFF priority dev and update records > RETURN
 // 4 Check is any priority fits surplus power pick the BIGGEST power need first check if more can fit AND SWITCH ON - record which ones are on > NO > RETURN
 // 5 IF priority 2 dev hot water check thermostat feedback if hot enough if so DO NOT switch on
 // 5 cross check old prioritys with new prioritys and switch OFF any mismatch *** care with priority 2  hot water??- copy new array to old array?
 
-    if(!$prioritylog[0][0]) return;    // no priority set
-    rsort($prioritylog);        // reorder prioitys with highest power first and priority as last choice
+    if(!$prioritylog[0][1]) return;    // no priority set
+    sort($prioritylog);        // reorder prioritys with highest power first and priority as last choice
     $currentpower -= $devicepower;
-    if( $currentpower <= 0 ) {          // calculate power suplus if any
+    if( $currentpower <= 0 ) {          // calculate power surplus if any
         $y = count($prioritylog);
         if ($y) {
             for($x = 0; $x < $y; ++$x) {        // scan through prioritys
                 $pin =  $prioritylog[$x][2];
                 exec( "/usr/local/bin/gpio write $pin 0");       // switch OFF all priority devices - no more power
+               usleep(500000);          // delay added to ensure wireless switching is sequential
             }
         }
     return;
     }
     $y = count($prioritylog);
-//var_dump($prioritylog);
     if ($y) {
-        for($x = 0; $x < $y; ++$x) {        // scan through prioritys ( yes I DO know how to spell priorities)
+        for($x = 0; $x < $y; ++$x) {        // scan through Auto prioritys ( yes I DO know how to spell priorities)
             $pin =  $prioritylog[$x][2];
-            if( $prioritylog[$x][1] == 1) {
-                if($currentpower - $prioritylog[$x][0] > 0) {
-                    $currentpower -= $prioritylog[$x][0];
-                    exec( "/usr/local/bin/gpio write $pin 1");       // switch on device
-                    $devicelog[count($devicelog)][0] = $prioritylog[$x][2];     // update $device list to include required priority 1 devices
-                } else {
-                    exec( "/usr/local/bin/gpio write $pin 0");      // make sure device is switched OFF
-                }
-            }
-        }
-        for($x = 0; $x < $y; ++$x) {        // scan through prioritys ( yes I DO know how to spell priorities)
-            $pin =  $prioritylog[$x][2];
-            if( $prioritylog[$x][1] == 2) {
-                if($currentpower - $prioritylog[$x][0] > 0) {
-                    $currentpower -= $prioritylog[$x][0];
-                    exec( "/usr/local/bin/gpio write $pin 1");       // switch on device
-                    $devicelog[count($devicelog)][0] = $prioritylog[$x][2];     // update $device list to include required priority 2 devices
-                } else {
-                    exec( "/usr/local/bin/gpio write $pin 0");      // make sure device is switched OFF
-                }
+            if($currentpower - $prioritylog[$x][1] > 0) {
+                $currentpower -= $prioritylog[$x][1];
+                exec( "/usr/local/bin/gpio write $pin 1");       // switch on device
+                $devicelog[count($devicelog)][0] = $prioritylog[$x][2];     // update $device list to include required priority 1 devices
+                usleep(500000);     // delay added to ensure wireless switching is sequential
+            } else {
+                exec( "/usr/local/bin/gpio write $pin 0");      // make sure device is switched OFF
+                usleep(500000);     // delay added to ensure wireless switching is sequential
             }
         }
     }
@@ -136,7 +152,10 @@ function checkPowerTargets($currentpower) {
                 if($devicePin[0] == $devicelog[$x][0]) $deviceOn = 1;       // check if in device list
             }
         }
-        if(!$deviceOn) exec( "/usr/local/bin/gpio write $devicePin[0] 0");      // switch OFF device
+        if(!$deviceOn) {
+            exec( "/usr/local/bin/gpio write $devicePin[0] 0");      // switch OFF device
+            usleep(500000);     // delay added to ensure wireless switching is sequential
+        }
     }
 return;
 }
@@ -192,7 +211,6 @@ function checkSchedules(array $nextSchedule ) {
                 }
             }
         }
-
     }
  }
 return $nextSchedule;
@@ -203,7 +221,7 @@ function runGpio( $cmd, $pin, $args = '' ) {
     global $devices, $schedules, $schedule;
 
     $run_today = True;
-
+    $offset = 0;
     foreach( $devices as $deviceName => $devicePin ) {
 	    if( $devicePin[0] == $pin) {
             $dateNow = (date("H")*60) + date("i");   // pre-checks for DOW, suspend and weather
@@ -215,22 +233,21 @@ function runGpio( $cmd, $pin, $args = '' ) {
                     break;
                 }
             }
-        if ($devicePin[5+$offset]) {        // cloud set?
+        if ($devicePin[1]) {        // cloud set?
             exec( "/usr/local/bin/gpio mode 0 input");
 		    $in = exec( "/usr/local/bin/gpio read 0");
         } else {
             $in = 0;
         }
-
         if( $cmd == "cron-write") {
-			if ( !$devicePin[date("N")+5+$offset] || $devicePin[4+$offset] || $in ) {
-				$run_today = False;             // suspend or day of week suspend using offset into dow array + todays day
+            $cmd = "write";
+            if ( !$devicePin[date("N")+5+$offset] || $devicePin[4+$offset] || $in ) {
+                $run_today = False;             // suspend or day of week suspend using offset into dow array + todays day
+            } else {
+                  $schedules["Schedule-1"][$deviceName][1] = 1; // set running bit
             }
-		}
-		if( $cmd == "cron-write") {
-			$cmd = "write";
-		}
-    }
+        }
+     }
   }
 
     if($run_today) {
@@ -238,9 +255,9 @@ function runGpio( $cmd, $pin, $args = '' ) {
 		    logEvent( $pin, $args );
 	    }
 
-// If we are turning on an exclusive/exclude pin, lets go through and turn off all the other
-// exclusive pins before we turn this one on.
-
+// If we have cloud lets go through and turn off all the other
+// exclusive pins before we turn this one on.  ***** needs rewriting *******
+/*
 	    if ($cmd == "write" && $args == 1) {
 		    foreach( $devices as $deviceName => $devicePin ) {
 			    if( $devicePin[0] == $pin && $devicePin[1] == 1 ) {
@@ -252,7 +269,7 @@ function runGpio( $cmd, $pin, $args = '' ) {
 			    }
 		    }
 	    }
-
+*/
 	    exec( "/usr/local/bin/gpio mode $pin out", $out, $status );
 	    $status = NULL;
 	    $out    = NULL;
@@ -260,6 +277,17 @@ function runGpio( $cmd, $pin, $args = '' ) {
 	    if( $status ) {
 		    print( "<p class='error'>Failed to execute /usr/local/bin/gpio $cmd $pin $args: Status $status</p>\n" );
 	    }
+/*        if ( $cmd == 'write' && $args == 1 ) {      // set the running bit (used with Auto)
+            foreach( $schedules as $scheduleNums => $scheduleKey ) {
+                foreach( $scheduleKey as $deviceNames => $devicePins ) {
+                    if ($devicePins[0] == $pin) {
+                        $devicePins[1] = 1;
+                        break;
+                    }
+                }
+            }
+        }
+*/
 	    if( is_array( $out ) && count( $out ) > 0  ) {
 		    return $out[0];
 	    } else {
@@ -364,9 +392,7 @@ END;
     $tmpHandle = fopen( $tmp, "w" );
     fwrite( $tmpHandle, $file );
     fclose( $tmpHandle );
-
     exec( "/usr/bin/crontab $tmp" );
-
     unlink( $tmp );
 }
 

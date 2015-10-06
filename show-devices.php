@@ -8,7 +8,7 @@
       <th>Status</th>
       <th>Schedule Num</th>
       <th>Power<br>Target</th>
-      <th>Priority</th>
+      <th>Auto</th>
       <th>Susp</th>
       <th>Cloud</th>
       <th>Mon</th>
@@ -57,15 +57,12 @@
      <input type="text" size="4" maxlength="4" max="4000" name="<?php print( $devicePin[0] ) ?>-Power" value="<?        // set power target
          printf(isset ($devicePin[3 +($devicePin[2] * 10)]) ? $devicePin[3 +($devicePin[2] * 10)] : 0);?>" />
     </td><td>
-     <input type="text" size="1" maxlength="1" max="3" name="<?php print( $devicePin[0] ) ?>-Exclude" value="<?        // set priority
-         printf( "%1d",isset ($devicePin[1]) ? $devicePin[1] : 0);?>" />
-
-
-<!--    <input type="checkbox" name="<?php print($devicePin[0]) ?>-Exclude" <?= $devicePin[1]==1 ? "checked":""?>> -->
+     <input type="text" size="1" maxlength="1" max="3" name="<?php print( $devicePin[0] ) ?>-Auto" value="<?        // set Auto power mgmnt  priority
+         printf( "%1d",isset ($devicePin[5+($devicePin[2] * 10)]) ? $devicePin[5+($devicePin[2] * 10)] : 0 );?>" />
      </td><td>
 	<input type="checkbox" name="<?php print($devicePin[0]) ?>-Suspend" <?= $devicePin[4+($devicePin[2] * 10)]==1 ? "checked":""?> />
      </td><td>
-	<input type="checkbox" name="<?php print($devicePin[0]) ?>-Cloud" <?= $devicePin[5+($devicePin[2] * 10)]==1 ? "checked":""?> />
+	<input type="checkbox" name="<?php print($devicePin[0]) ?>-Cloud" <?= $devicePin[1]==1 ? "checked":""?> />
      </td><td>
 	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowMon" <?= $devicePin[6+($devicePin[2] * 10)]==1? "checked":""?> />
      </td><td>
@@ -101,5 +98,6 @@
     <h3>Solar Power Available : <? print $poweravailable."kWs" ?> </h3>
     Enter Power Reserve : <input type="text" size="4" maxlength="4" name="powerreserve" value="<?php print(  $powerReserve ) ?>"/> Watts
 <?  checkPowerTargets($poweravailable*1000); ?>
+
   </form>
 

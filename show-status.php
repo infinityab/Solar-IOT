@@ -4,11 +4,11 @@
   <form method="POST">
    <table class="status">
 
-<tr> <td> </td> <td> <b>Sta</td> <td><b>Pr</td> <td><b>Pwr</td><td> </td><td> </td>
-     <th>Schedule 1</th>
-     <th>Schedule 2</th>
-     <th>Schedule 3</th>
-     <th>Schedule 4</th>
+<tr> <td><b> Appliance</td> <td><b>Status</td> <td><b>Auto</td> <td><b>Pwr</td><td>Manual </td><td> Manual Time </td>
+     <th>Timer Schedule 1</th>
+     <th>Timer Schedule 2</th>
+     <th>Timer Schedule 3</th>
+     <th>Timer Schedule 4</th>
 <?php
 
     foreach( $devices as $deviceName => $devicePin ) {
@@ -22,7 +22,8 @@
 ?>
      </td><td>
 <?
-        print $devicePin[1];        // Priority
+        if (!$devicePin[5]){  print "<font color='blue'>Off</font>"; } else
+        print "<font color='red'>".$devicePin[5]."</font>";        // Auto Power priority
 ?>
      </td><td>
 <?

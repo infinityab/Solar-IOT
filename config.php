@@ -3,23 +3,27 @@
 
 // Title of the web page
 $title = "Solar Timer Scheduler";
-//                             0-p=pin,1-e=priority,2-s=sched box,3-d=power target,4-s=suspend,5-c=cloud,6-12 then mon-sun
+//                             0-p=pin,1-c=cloud,2-s=sched box,3-d=power target,4-s=suspend,5-a=autoPM,6-12 then mon-sun
 //                               Sched1              Sched2              Sched3              Sched4
 //                                  v             10    v             20    v             30    v             40
 //                            0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2
-//                            p,e,s,d,s,c,m,t,w,t,f,s,s,d,s,c,m,t,w,t,f,s,s,d,s,c,m,t,w,t,f,s,s,d,s,c,m,t,w,t,f,s,s
+//                            p,c,s,d,s,a,m,t,w,t,f,s,s,d,s,a,m,t,w,t,f,s,s,d,s,a,m,t,w,t,f,s,s,d,s,a,m,t,w,t,f,s,s
 $devices = array(
-    "Hot Water Main" => array(6,2,0,300,0,0,1,1,1,1,1,1,1,300,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1),
-    "Hot Water Boost" => array(5,0,0,200,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1),
-    "Pool Pump" => array(4,1,0,400,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1),
-    "Enviro Pump" => array(10,1,0,400,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1),
-    "Heat-Aircon" => array(11,1,0,200,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1),
-    "Wireless Pwr1" => array(3,0,0,1200,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1),
+    "Hot Water Main" => array(6,0,0,2400,0,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1),
+    "Washing Mach." => array(5,0,0,1100,0,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1),
+    "Pool Pump" => array(4,0,0,400,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1),
+    "Enviro Pump" => array(10,0,0,400,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1),
+    "Wireless Pwr1" => array(11,0,0,1250,1,2,1,1,1,1,1,1,1,0,0,2,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1),
+    "Wireless Pwr2" => array(3,0,0,1000,1,1,1,1,1,1,1,0,0,0,0,1,0,0,0,0,0,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1),
+    "Reserve Extra" => array(2,0,0,1000,0,0,1,0,0,0,0,0,0,1000,0,0,0,0,0,0,1,0,0,1000,0,0,1,1,1,1,1,1,1,1000,0,0,0,1,0,0,0,0,0),
 );
 
-$powerReserve = 320;
+$powerReserve = 350;
                 //  Power Reserve is deducted from the available solar power before any Priority calculations are made
-
+$hwsTsPin = array();
+                // Hws Pin#,thermostat Wiring Pin# to indicate thermostat status - leave as null array if not used
+$cloudPin = 0;
+                // cloud wiring pin#
 // Where to log events. This file must be writeable by the webserver user, e.g. "chown www-data /var/log/rasptimer.log"
 $logFile      = "/var/log/rasptimer.log";
 
