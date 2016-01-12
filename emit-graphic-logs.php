@@ -162,9 +162,9 @@ if( !isset( $parsedLine ) || !$parsedLine ) {
 <?php
 }
 ?>
-   <tr>             // added hour legend to base graph
+   <tr>
     <th></th>
-<?php
+<?php               // added hour legend to base graph
     for( $i=0 ; $i<24 ; ++$i ) {
         print( "    <th class=\"h\">$i</th>\n" );
     }

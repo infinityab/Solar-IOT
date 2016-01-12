@@ -1,17 +1,3 @@
-<script>
-resetTimer = false;
-timer = setInterval(function() {
-    if(!resetTimer) {
-        document.getElementById('status').innerText = 'Refreshing';
-        location.reload();
-    }
-    else {
-        document.getElementById('status').innerText = 'Skip Refresh';
-    }
-    resetTimer = false;
-}, 30000);
-</script>
-
 <h2>Current Devices:</h2>
 
   <form method="POST">
@@ -35,16 +21,23 @@ timer = setInterval(function() {
    </tr>
 <tr>
 <?php
-    $j = strip_tags(file_get_contents($wifiget."4"));    //  eg 192.168.x.x/gpio/0" defined in config from meter server
-//    $res=checkPowerTargets($j); // check for power changes and action
     reset($devices);
     $firstKey = key($devices);              // get first element so we only print 'schedule' once
     foreach( $devices as $deviceName => $devicePin ) {
-?>   <th align="left"><?php print( $deviceName ) ?></th>
-     <td><?php print( $devicePin[0] )?></th><?
-     $deviceStatus = exec( "/usr/local/bin/gpio read $devicePin[0]");?><td><?
-     print( $deviceStatus ? "<font color='red'>On</font>" : "<font color='blue'>Off</font>" );?></td><?
-     if ( $devices[$firstKey][0] == $devicePin[0]) {  ?>
+?>
+     <th align="left"><?php print( $deviceName ) ?></th>
+     <td><?php print( $devicePin[0] ) ?> </th>
+<?
+        $deviceStatus = exec( "/usr/local/bin/gpio read $devicePin[0]");
+?>
+     <td>
+<?
+        print( $deviceStatus ? "<font color='red'>On</font>" : "<font color='blue'>Off</font>" );
+?>
+     </td>
+<?
+        if ( $devices[$firstKey][0] == $devicePin[0]) {
+?>
 <td>
 	 for
         <select name="<?php print($devicePin[0]) ?>-ScheduleConf" onChange="this.form.submit()">
@@ -54,9 +47,10 @@ timer = setInterval(function() {
 	        <option value="3" <?= $devicePin[2]==3 ? "selected":""?>>Schedule 4</option>
       </select>
      </td>
+<?php   } else {
+?>
+<td></td>
 <?php
-   } else {
-?><td></td><?
  }
 ?>
     <td>
@@ -92,14 +86,8 @@ timer = setInterval(function() {
  <td colspan="4">
 
 </td><tr><tr><tr><td>
-
-<!-- <input onkeyup="resetTimer = true"> -->
- <div id="status">
- </div>
-<input type="submit" text="Submit" name="<?php print( $devicePin[0] ) ?>-Config" value="Submit Config"
-     onclick="clearInterval(timer);document.getElementById('status').innerText = 'Submitted';"/>
-
-<? /*      <input type="submit" name="<?php print( $devicePin[0] ) ?>-Config" value="Submit Config"/>*/ ?>      <a href="">Cancel</a>
+      <input type="submit" name="<?php print( $devicePin[0] ) ?>-Config" value="Submit Config"/>
+      <a href="">Cancel</a>
 </td>
 </tr>
    </table>
@@ -107,14 +95,12 @@ timer = setInterval(function() {
 <?php
     require( 'emit-current-time.php' );
     $poweravailable = getSmaPower();
-//    $j = strip_tags(file_get_contents($wifigridpwr));    //  eg 192.168.x.x/gpio/0" defined in config from meter server
-//    $res=checkPowerTargets($j);
 ?>
-    <h3><? print "Solar Surplus : ".$j." Watts".$res;?></h3>
-    <h3>Solar Power Available : <? print ($poweravailable*1000)." Watts" ?> </h3>
-    Enter Power Lag : <input type="text" size="4" maxlength="4" name="powerreserve"
+    <h3>Solar Power Available : <? print $poweravailable."kWs" ?> </h3>
+    Enter Power Reserve : <input type="text" size="4" maxlength="4" name="powerreserve" 
         value="<?php print(  $powerReserve ) ?>"/> Watts
-<!---    <h3>Current Schedule : <? print ($devicePin[2]+1)?></h3> -->
+<?  checkPowerTargets($poweravailable*1000); ?>
+    <h3>Current Schedule : <? print ($devicePin[2]+1)?></h3>
 
- </form>
+  </form>
 

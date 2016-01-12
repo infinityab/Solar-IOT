@@ -1,22 +1,29 @@
- <meta http-equiv="refresh" content="19">
-<p style="font-size:22px">
+
+<meta http-equiv="refresh" content="60">
+<p style="font-size:20px">
+
 <?php
-    $space="";
+    startPhp();     // check for first start
+    $space="";      // dummy
     $poweravailable = getSmaPower();
     if(!$poweravailable) $poweravailable = getSmaPower();      // try again if zero or null
-    print "<b>Current Schedule".$space."</b> ~ ~ <b>Solar Power : " . $poweravailable." Kws </b> ~  Power Reserve : " . $powerReserve . " Watts";
+    print "<b>Next Schedule".$space."</b>"; //- <b>Solar Power : " . $poweravailable." Kws </b> ~  Power Reserve : " . $powerReserve . " Watts";
     print (" ~ " ); require( 'emit-current-time.php' ); ?><p></p>
 
   <form method="GET">
   <table class="schedule">
 <?php
     $schedule = readCrontab();
-    $timeOut = (date("H")*60) + date("i");
-    if(!( timeOut ) ) {                 // i.e midnight time rollover
+//    $timeOut = (date("H")*60) + date("i");
+//    if(!( $timeOut ) ) {                 // i.e midnight time rollover
         $Schedule = checkSchedules( $schedule );
         writeCrontab($Schedule);
-    }
-
+//    }
+    $pass = 1;
+    $j = strip_tags(file_get_contents($wifiget."4"));    //  eg 192.168.x.x/gpio/0" defined in config from meter server
+//    $res = checkPowerTargets($j);   // check for any power changes and action
+    reset($devices);
+    $firstKey = key($devices);              // get first element so we only print 'schedule' once
     foreach( $devices as $deviceName => $devicePin ) {
 ?>
      <tr>
@@ -40,10 +47,36 @@
      </td><td>
       <input type="submit" name="<?php print( $deviceName ) ?>Action" value="-Bump" />
     </td><td>
+
+       <p style="font-size:22px"><b>
 <?
-}
+        if ( $pass == 1) {      // add in any extra required data below here
+            print "Solar Surplus : ".$j." Watts ".$res;
+        } elseif ( $pass == 2) {
+            print "Solar Power : ".($poweravailable * 1000)." Watts";
+        } elseif ( $pass == 3) {
+            print "Power Lag : ".$powerReserve." Watts";
+        } elseif ( $pass == 4) {
+        $j = strip_tags(file_get_contents($wifiget."6"));
+            print $j;
+        } elseif ( $pass == 5) {
+        $j = strip_tags(file_get_contents($wifiget."7"));
+            print $j;
+        } elseif ( $pass == 6) {
+        $j = strip_tags(file_get_contents($wifiget."8"));
+            print $j;
+        } elseif ( $pass == 7) {
+        $j = strip_tags(file_get_contents($wifiget."9"));
+            print $j;
+        }
+        ++$pass;
+    }
 ?>
-    </tr>
+<p style="font-size:18px"></b>
+
+</b></tr>
    </table>
+
   </form>
+
 

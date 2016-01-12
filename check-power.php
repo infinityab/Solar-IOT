@@ -1,8 +1,8 @@
 
 <?php
 require( 'functions.php' );
-$powerAvailable = getSmaPower();                // get the current solar power available
-if( !$powerAvailable) $powerAvailable = getSmaPower();
-checkPowerTargets($powerAvailable*1000);        // check there is still enough spare power
+require( 'config.php' );
+$j = strip_tags(file_get_contents($wifiget."4"));   // GET http data from meter
+$res = checkPowerTargets($j);   // to reverse the sign x -1
 ?>
 

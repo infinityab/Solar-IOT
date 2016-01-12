@@ -151,6 +151,9 @@ div.graphic-log span.d5 {
 div.graphic-log span.d6 {
     background: #FDE835
 }
+div.graphic-log span.d7 {
+    background: #FF0B33
+}
 
 div.graphic-log div.bar > span.d0 {
     top: 0;
@@ -172,6 +175,9 @@ div.graphic-log div.bar > span.d5 {
 }
 div.graphic-log div.bar > span.d6 {
     top: 60px;
+}
+div.graphic-log div.bar > span.d7 {
+    top: 70px;
 }
 
 /* possibly add colors for more devices */

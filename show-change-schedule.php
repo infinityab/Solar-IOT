@@ -1,6 +1,5 @@
 
 <?php
-
 foreach( $devices as $deviceName => $devicePin ) {
     $postPar = $deviceName . 'Action';
     $postPar = str_replace( ' ', '_', $postPar ); // we love PHP

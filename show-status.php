@@ -1,9 +1,11 @@
   <meta http-equiv="refresh" content="17">
-
-  <h2>Current status: </h2>
+<p style="font-size:20px">
+<?php /* print "<b>Current status: </b>"; */ ?>
   <form method="POST">
    <table class="status">
-
+<?php
+    $day = date("N");
+?>
 <tr> <td><b> Appliance</td> <td><b>Status</td> <td><b>Auto</td> <td><b>Pwr</td><td>Manual </td><td> Manual Time </td>
      <th>Timer Schedule 1</th>
      <th>Timer Schedule 2</th>
@@ -12,7 +14,7 @@
 <?php
 
     foreach( $devices as $deviceName => $devicePin ) {
-        $deviceStatus = runGpio( "read", $devicePin[0] );
+        $deviceStatus = exec( "/usr/local/bin/gpio read $devicePin[0]");   //  runGpio( "read", $devicePin[0] );
 ?>
      <tr>
      <th><?php print( $deviceName ) ?></th>
@@ -54,19 +56,31 @@
      </td>
 
 <?php
+        $offset = 0;
      foreach( $schedules as $scheduleNums => $scheduleKey ) {
+        $offset++;
 ?><td><?php
         foreach( $scheduleKey as $deviceNames => $devicePins ) {
          if( $deviceName == $deviceNames ) {
            if( $devicePins[2] != 0 ) {
-              printf( "%02d:%02d:00 for %02d:%02d:00",
+               if ($devicePin[5+$day+(($offset-1)*10)] && !$devicePin[4]) {
+                    print "<font color='blue'>";
+                    }
+                        else
+                    {
+                    print "<font color='black'>";
+                    }
+                printf( "%02d:%02d:00 for %02d:%02d:00",
                 $devicePins[3],
                 $devicePins[4],
                 $devicePins[5],
                 $devicePins[6]);
-        } else {
-            print "not scheduled";
-        }
+                print "</font>";
+            } else {
+                print "<font color='black'>";
+                print "not scheduled";
+                print "</font>";
+            }
 ?>
 </td>
 <?php

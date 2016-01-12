@@ -4,7 +4,13 @@ require_once( 'config2.php' );
 require_once( 'template.php' );
 require_once( 'functions.php' );
 require_once( 'decode-url.php' );
-
+if(!file_exists('/tmp/startup')) { 
+    touch('/tmp/startup');
+    startPhp(); 
+}
+// $json_string = file_get_contents("http://192.168.0.117/digital/1/1/"); // reset ESP wifi servers
+// $json_string = file_get_contents("http://192.168.0.118/digital/1/1/");
+$prevpower = "";
 if( $_POST ) {
     require_once( 'handle-post.php' );
 }
