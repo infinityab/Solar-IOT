@@ -14,7 +14,7 @@ function wifiCheck($pin,$onoff) {
 
     global  $wifi1, $wifi2, $wifi3, $wifi4;
 
-   require ('config.php');
+   include ('config.php');
     if ( $pin == $wifi1[0]) {   // is it a  wifi appliance
         $json_string = file_get_contents($wifi1[1]."2/0");   // .$onoff);
         $start = microtime_float();
@@ -171,10 +171,9 @@ function checkPowerTargets($currentpower) {
 
     global $devices,$schedules;
 
-    require( 'config.php');
-    require( 'config2.php');
+    include( 'config.php');
+    include( 'config2.php');
 //    $currentpower = strip_tags($currentpower); // strip out HTML junk
-    static $airdelay1 = 0;
     $a = $currentpower." ";
 //    $currentpower += $powerReserve;     // first deduct any power reserve (for fridges, computer equip  etc)
     $b = $currentpower." ";
@@ -202,13 +201,12 @@ function checkPowerTargets($currentpower) {
                     $devicepower += $devicePin[3+(($x-1)*10)];          // build devices ON list
                     $devicelog[$totd][0] = $devicePin[0];   // Device Wiring Pin number
                   //  $devicelog[$totd][1] = $devicePin[3+(($x-1)*10)];   // Power requirement
-                    $devicelog[$totd][1] = $devicePin[3];   // Power requirement
-
+                    $devicelog[$totd][1] = $devicePin[3];   // Power requirement - 1st position only Not indexed
                     ++$totd;
                     break;
                 }
             }
-        } elseif ( $devicePin[5] ) {    // scan for active time slot and build priority auto list
+        } elseif ( $devicePin[5] ) {    // i.e. Auto - scan for active time slot and build priority auto list
             for( $x = 1; $x <= 4; ++$x) {
                 $timenowps = ( ($schedules["Schedule-".$x][$deviceName][3])*60) +
                   $schedules["Schedule-".$x][$deviceName][4];                       //start time of schedule
@@ -217,7 +215,7 @@ function checkPowerTargets($currentpower) {
                 if ( ($timenowps <= $timeNow && $timeNow <= $timenowpe) &&  $devices[$deviceName][5+(date("N"))+
                   (($x-1)*10)] && !$devices[$deviceName][4+(($x-1)*10)] ) {   // within time now, indexed DOW and suspend
                     $prioritylog[$totp][0] = $devicePin[5];   // Priority setting
-                   $prioritylog[$totp][1] = $devicePin[3];  // power requirement
+                   $prioritylog[$totp][1] = $devicePin[3];  // power requirement 1st position only NOT indexed
                     //  $prioritylog[$totp][1] = $devicePin[3+(($x-1)*10)];   // Power requirement
                     $prioritylog[$totp][2] = $devicePin[0];   // Pin Number
                     ++$totp;
@@ -233,6 +231,9 @@ function checkPowerTargets($currentpower) {
             $pin =  $prioritylog[$x][2];
             if(exec( "/usr/local/bin/gpio read $pin")) {
                 $currentpower += $prioritylog[$x][1];   // power requirement
+                $prioritylog[$x][3]= 1;
+            } else {
+                $prioritylog[$x][3]= 0;     // set ON or OFF bit
             }
         }
     }
@@ -250,82 +251,56 @@ $c = $currentpower." ";
 
     if(!count($prioritylog)) return (" No Active Priority set");    // no priority set
     sort($prioritylog);        // reorder priorities with highest first
-/*    if( $currentpower + $powerReserve <= 0 ) {          // calculate power surplus if any
-        $y = count($prioritylog);
-        if ($y) {
-            for($x = 0; $x < $y; ++$x) {        // scan through priorities
-                $pin =  $prioritylog[$x][2];
-                if(exec( "/usr/local/bin/gpio read $pin")) {
-                    exec( "/usr/local/bin/gpio write $pin 0");       // switch OFF all priority devices - no more power
-                    wifiCheck($pin,0);        // pulse the aircon off
-                    logEvent( $pin, 0 );
-//                    if ($y > 1 && $x <> $y){
-//                        $start = microtime_float();
-//                        while (microtime_float() <= $start + 0.75) {}     // delay added to ensure wireless switching is sequential
-//                    }
-//                    if ($y > 1 && $x <> $y) usleep(600000);          // delay added to ensure wireless switching is sequential
-                }
-            }
-        }
-    return(" No surplus power available");
-    }
-*/
     $y = count($prioritylog);
     if ($y) {
-        for($x = 0; $x < $y; ++$x) {        // scan  Auto to see iif any appl can be switched on
+        for($x = 0; $x < $y; ++$x) {        // scan  Auto to see if any appliance can be switched on
             $pin =  $prioritylog[$x][2];
-            if($currentpower - $prioritylog[$x][1] > 0) {
-                $currentpower -= $prioritylog[$x][1];
-                if( !exec( "/usr/local/bin/gpio read $pin")) {
+
+            if (!$prioritylog[$x][3]) {      // device is OFF
+                if($currentpower - $prioritylog[$x][1] >= 0) {
+                    $currentpower -= $prioritylog[$x][1];
+                    $devcount = count($devicelog);  // sufficeient power so add to device ON list
+                    $devicelog[$devcount][0] = $prioritylog[$x][2];     // pin# update $device list withAuto device
+                    $devicelog[$devcount][1] = $prioritylog[$x][1];     // pwr - priority required to trigger logevent
                     exec( "/usr/local/bin/gpio write $pin 1");       // switch on device surplus power available
                     wifiCheck($pin,1);
-                    logEvent( $pin, 1 );
-                }
-                $devcount = count($devicelog);
-                $devicelog[$devcount][0] = $prioritylog[$x][2];     // pin# update $device list to include this priority  device
-                $devicelog[$devcount][1] = $prioritylog[$x][1];     // pwr - priority required to trigger logevent
+                    logEvent( $pin,"1");
+               }
             } else {
-                if($currentpower + $powerReserve - $prioritylog[$x][1] < 0) {   // include hysteresis to switch off
-                    if (exec( "/usr/local/bin/gpio read $pin")) {
-                        exec( "/usr/local/bin/gpio write $pin 0");       // make sure device is switched OFF
-                        wifiCheck($pin,0);        // pulse the aircon off
-                        logEvent( $pin, 0 );
-                    }
+                if($currentpower + $powerReserve - $prioritylog[$x][1] < 0) {   // include Lag/hysteresis to switch off
+                    exec( "/usr/local/bin/gpio write $pin 0");       // switch off device not enough power
+                    wifiCheck($pin,0);        // pulse the aircon off - power is already added in so don't deduct
+                    logEvent( $pin,"0");
+                } else {
+                    $currentpower -= $prioritylog[$x][1];   // staying ON - remove the device power from power pool
+                    $devcount = count($devicelog);  // device still has enough power so add to device ON list
+                    $devicelog[$devcount][0] = $prioritylog[$x][2];     // pin# update $device list withAuto device
+                    $devicelog[$devcount][1] = $prioritylog[$x][1];     // pwr - priority required to trigger logevent
                 }
             }
         }
     }
 $d = $currentpower." ";
-  $y = count($devicelog);
-    foreach( $devices as $deviceName => $devicePin ) {
+  $y = count($devicelog);   // all devices on lists have passed suspend, time and day tests
+    foreach( $devices as $deviceName => $devicePin ) {   // therefore now scan for devices that are not required
         $deviceOn = 0;
         $pin = $devicePin[0];
         if ($y) {
-            for($x = 0; $x < $y; ++$x) {                // now scan for devices that are not required
-                if($devicePin[0] == $devicelog[$x][0]) $deviceOn = 1; // check if in device list (priorities is now in devicelog)
+            for($x = 0; $x < $y; ++$x) {
+                if($devicePin[0] == $devicelog[$x][0]) $deviceOn = 1; // check if in device ON list
             }
         }
         if(!$deviceOn) {
-            if( $devicePin[5]) {    // Auto - priority device
+            if( $devicePin[5]) {    // ONLY check Auto - priority device others may be Manual start
                 if (exec( "/usr/local/bin/gpio read $pin")) {
                     exec( "/usr/local/bin/gpio write $pin 0");      // switch OFF device
                     wifiCheck($devicePin[0],0);        // pulse the aircon switch
-                    logEvent( $devicePin[0],0);
+                    logEvent( $devicePin[0],"0");
                 }
-//            }else {
-//                if (exec( "/usr/local/bin/gpio read $pin")) {
-//                    exec( "/usr/local/bin/gpio write $pin 0");      // switch OFF device
-//                    wifiCheck($pin,0);        // pulse the aircon switch
-//                    logEvent($pin,0);
-//                    if ($y > 1 && $x <> $y){
-//                      $start = microtime_float();
-//                        while (microtime_float() <= $start + 0.75) {}     // delay added to ensure wireless switching is sequential
-//                    }
-//                }
             }
         }
     }
-$k = " cr".$b."crp".$c."rm".$d.$airdelay1;
+$k = " cr".$b."crp".$c."rm".$d;
 return $k;
 }
 
@@ -339,8 +314,8 @@ function checkSchedules(array $nextSchedule ) {
 
 //ini_set('display_errors', 'On');  // uncomment for error reporting
 //error_reporting(E_ALL | E_STRICT);
-    require( 'config2.php' );
-    require( 'config.php' );
+    include( 'config2.php' );
+    include( 'config.php' );
     $timeNow = (date("H")*60) + date("i");
     $lastSched = True;
     $sch = 0;

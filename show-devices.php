@@ -24,7 +24,7 @@ timer = setInterval(function() {
       <th>Power<br>Target</th>
       <th>Auto</th>
       <th>Susp</th>
-      <th>Cloud</th>
+      <th>Light</th>
       <th>Mon</th>
       <th>Tue</th>
       <th>Wed</th>
@@ -61,10 +61,12 @@ timer = setInterval(function() {
 ?>
     <td>
      <input type="text" size="4" maxlength="4" max="4000" name="<?php print( $devicePin[0] ) ?>-Power" value="<?        // set power target
-         printf(isset ($devicePin[3 +($devicePin[2] * 10)]) ? $devicePin[3 +($devicePin[2] * 10)] : 0);?>" />
+          printf(isset ($devicePin[3]) ? $devicePin[3] : 0);?>" />
+<!-- printf(isset ($devicePin[3 +($devicePin[2] * 10)]) ? $devicePin[3 +($devicePin[2] * 10)] : 0);?>"/> for multi-power targets -->
     </td><td>
      <input type="text" size="1" maxlength="1" max="3" name="<?php print( $devicePin[0] ) ?>-Auto" value="<?        // set Auto power mgmnt  priority
-         printf( "%1d",isset ($devicePin[5+($devicePin[2] * 10)]) ? $devicePin[5+($devicePin[2] * 10)] : 0 );?>" />
+     printf( "%1d",isset ($devicePin[5]) ? $devicePin[5] : 0 );?>"/>
+<!-- printf( "%1d",isset ($devicePin[5+($devicePin[2] * 10)]) ? $devicePin[5+($devicePin[2] * 10)] : 0 );?>"/> for multi-Auto targets -->
      </td><td>
 	<input type="checkbox" name="<?php print($devicePin[0]) ?>-Suspend" <?= $devicePin[4+($devicePin[2] * 10)]==1 ? "checked":""?> />
      </td><td>
@@ -110,10 +112,19 @@ timer = setInterval(function() {
 //    $j = strip_tags(file_get_contents($wifigridpwr));    //  eg 192.168.x.x/gpio/0" defined in config from meter server
 //    $res=checkPowerTargets($j);
 ?>
-    <h3><? print "Solar Surplus : ".$j." Watts".$res;?></h3>
-    <h3>Solar Power Available : <? print ($poweravailable*1000)." Watts" ?> </h3>
-    Enter Power Lag : <input type="text" size="4" maxlength="4" name="powerreserve"
-        value="<?php print(  $powerReserve ) ?>"/> Watts
+<table class="status">
+    <td><h3><? print "Solar Surplus : ".$j." Watts".$res;?><td><td><td><td><h4>
+       <? $j = strip_tags(file_get_contents($wifiget."6"));
+            print $j;?></td><tr>
+    <td><h3>Solar Power Available : <? print ($poweravailable*1000)." Watts" ?><td><td><td><td><h4>
+       <? $j = strip_tags(file_get_contents($wifiget."7"));
+          print $j;?></td><tr>
+    <td><h3>Enter Power Lag : <input type="text" size="4" maxlength="4" name="powerreserve"
+        value="<?php print(  $powerReserve ) ?>"/> Watts<td><td><td><td><h4>
+        <?  $j = strip_tags(file_get_contents($wifiget."8"));
+            print $j;?></h4></td>
+</table>
+
 <!---    <h3>Current Schedule : <? print ($devicePin[2]+1)?></h3> -->
 
  </form>
