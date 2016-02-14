@@ -1,6 +1,6 @@
 <?php
-$barHeight       = 10; // px
-$barWidthPerHour = 24; // must be the same as in the CSS file, plus 1 for the border
+$barHeight       = 20; // px
+$barWidthPerHour = 51; // must be the same as in the CSS file, plus 1 for the border
 ?>
 <style>
 div.graphic-log td,

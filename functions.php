@@ -16,29 +16,33 @@ function wifiCheck($pin,$onoff) {
 
    include ('config.php');
     if ( $pin == $wifi1[0]) {   // is it a  wifi appliance
-        $json_string = file_get_contents($wifi1[1]."2/0");   // .$onoff);
-        $start = microtime_float();
-        while (microtime_float() <= $start + 0.75) {}     // delay added to ensure wireless switching is sequential
-
+        $json_string = file_get_contents($wifi1[1]."2/0");   // downstairs Aircon
+        $json_string = file_get_contents($wifi3[1].$onoff);   // to start and stop external fan for aircon boost
+        logEvent( $wifi3[0],$onoff);
     } elseif ( $pin == $wifi2[0]) {   // is it a wifi appliance
-        $json_string = file_get_contents($wifi2[1]."2/0); // ".$onoff);
-        $start = microtime_float();
-        while (microtime_float() <= $start + 0.75) {}     // delay added to ensure wireless switching is sequential
+        $json_string = file_get_contents($wifi2[1]."2/0"); // upstairs Aircon
+        $json_string = file_get_contents($wifi7[1].$onoff);   // to start and stop external fan for aircon boost
+        logEvent( $wifi7[0],$onoff);
+    } elseif ( $pin == $wifi3[0]) {   // wireless socket #1 only
+        $json_string = file_get_contents($wifi3[1].$onoff);
 
-    } elseif ( $pin == $wifi3[0]) {   // is it a wifi appliance
-        $json_string = file_get_contents($wifi3[1].$onoff."/");
-        $start = microtime_float();
-        while (microtime_float() <= $start + 0.75) {}     // delay added to ensure wireless switching is sequential
+    } elseif ( $pin == $wifi4[0]) {   // wireless socket #2 only
+        $json_string = file_get_contents($wifi4[1].$onoff);
 
-    } elseif ( $pin == $wifi4[0]) {   // is it a wifi appliance
-        $json_string = file_get_contents($wifi4[1].$onoff."/");
-        $start = microtime_float();
-        while (microtime_float() <= $start + 0.75) {}     // delay added to ensure wireless switching is sequential
+    } elseif ( $pin == $wifi5[0]) {   // wireless socket #3 only
+       $json_string = file_get_contents($wifi5[1].$onoff);
+
+// **    } elseif ( $pin == $wifi6[0]) {   // ALL wireless sockets ON or OFF
+// **        $json_string = file_get_contents($wifi4[1].$onoff);
     }
+
 return;
 }
 
-function microtime_float() {
+ function microtime_float() {
+
+//  $start = microtime_float();       // example
+//  while (microtime_float() <= $start + 0.75) {}  // delay 
 
     list($usec, $sec) = explode(" ", microtime());
     return ((float) $usec + (float) $sec);
