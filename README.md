@@ -69,7 +69,39 @@ To add a password to the website use vi or nano editor:
 To enable weekly log rotation:
 
     sudo cp /etc/logrotate.d/rasptimer logrotate.d-rasptimer /etc/logrotate.d/rasptimer
+    
+    To Add a Watchdog Timer in case of Pi hanging - thanks to Ricardo Cabral
+    
+     To load the watchdog kernel module right now, issue the following command:
+$ sudo modprobe bcm2708_wdog
 
+If you are running Raspbian, to load the module the next time the system boots, add a line to your /etc/modules file with "bcm2708_wdog". The -a option makes sure tee appends instead.
+$ echo "bcm2708_wdog" | sudo tee -a /etc/modules
+
+ Install the software watchdog daemon
+Run the following command:
+$ sudo apt-get install watchdog
+
+Then, make sure it runs after every boot.
+Run:
+$ sudo update-rc.d watchdog defaults
+OR
+$ sudo chkconfig --add watchdog
+
+Configure the watchdog daemon
+Open /etc/watchdog.conf with your favorite editor.
+$ sudo nano /etc/watchdog.conf
+
+Uncomment the line that starts with #watchdog-device by removing the hash (#) to enable the watchdog daemon to use the watchdog device.
+Uncomment the line that says #max-load-1 = 24 by removing the hash symbol to reboot the device if the load goes over 24 over 1 minute. A load of 25 of one minute means that you would have needed 25 Raspberry Pis to complete that task in 1 minute. You may tweak this value to your liking.
+
+Start the watchdog daemon
+$ sudo chkconfig watchdog on
+or
+$ sudo /etc/init.d/watchdog start
+Done.
+    
+Pi GPIO Wiring Pin Equivalents
 The pin numbers on the Pi as described and used in the config files are the Wiring Pi pin numbers not the Pi header pin numbers, here is a cross reference header chart as used on the Pi for the 26 pin header
 
 HD	Wi	GP	 Name   	   
