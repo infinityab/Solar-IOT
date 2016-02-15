@@ -1,4 +1,4 @@
-Rasptimer - Solar Timer Scheduler
+Solar Timer Scheduler
 =========
 
 Use Raspberry Pi as a schedulable timer for GPIO hardware, configurable over the web by PC, tablet or smartphone.
