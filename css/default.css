@@ -105,7 +105,7 @@ div.graphic-log > table > * > * > th {
     text-align: center;
 }
 th.h {
-    width: 23px;
+    width: 50px; //23
 }
 .selected {
     font-weight: bold;
@@ -124,7 +124,7 @@ div.graphic-log div.bar {
 div.graphic-log div.bar > span {
     display: block;
     position: absolute;
-    height: 10px;
+    height: 24px;  //10
 }
 
 span.dotdotdot {
@@ -156,22 +156,22 @@ div.graphic-log div.bar > span.d0 {
     top: 0;
 }
 div.graphic-log div.bar > span.d1 {
-    top: 10px;
+    top: 20px;                         // 10px
 }
 div.graphic-log div.bar > span.d2 {
-    top: 20px;
-}
-div.graphic-log div.bar > span.d3 {
-    top: 30px;
-}
-div.graphic-log div.bar > span.d4 {
     top: 40px;
 }
+div.graphic-log div.bar > span.d3 {
+    top: 60px;
+}
+div.graphic-log div.bar > span.d4 {
+    top: 80px;
+}
 div.graphic-log div.bar > span.d5 {
-    top: 50px;
+    top: 100px;
 }
 div.graphic-log div.bar > span.d6 {
-    top: 60px;
+    top: 120px;
 }
 
 /* possibly add colors for more devices */

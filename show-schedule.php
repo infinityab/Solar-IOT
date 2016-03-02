@@ -7,7 +7,7 @@
     $space="";      // dummy
     $poweravailable = getSmaPower();
     if(!$poweravailable) $poweravailable = getSmaPower();      // try again if zero or null
-    print "<b>Next Schedule </b>below".$space; //- <b>Solar Power : " . $poweravailable." Kws </b> ~  Power Reserve : " . $powerReserve . " Watts";
+    print "<b>Active Schedule </b>below".$space;
     print (" | " ); require( 'emit-current-time.php' ); ?><p></p>
 
   <form method="GET">
@@ -16,7 +16,7 @@
     $schedule = readCrontab();
 //    $timeOut = (date("H")*60) + date("i");
 //    if(!( $timeOut ) ) {                 // i.e midnight time rollover
-        $Schedule = checkSchedules( $schedule );
+        $Schedule = checkSchedules( $schedule );  // check and bump schedules if necessary
         writeCrontab($Schedule);
 //    }
     $pass = 1;
@@ -71,43 +71,6 @@
         }
         ++$pass;
     }
-/* {
-      "id": "pvlog",
-      "name": "Photovolatik Energiemonitor",
-      "class": "LogWatcher",
-      "file": "/home/pi/sbfspot.log",
-      "attributes": [
-        {
-          "name": "acout",
-          "type": "number",
-          "unit": "kW"
-        },
-        {
-          "name": "actoday",
-          "type": "number",
-          "unit": "kWh"
-        },
-        {
-          "name": "actotal",
-          "type": "number",
-          "unit": "kWh"
-        },      
-      ],
-        "lines": [
-        {
-          "match": "\\s*Total Pac\\s*:\\s*([0-9]+\\.[0-9]+)kW",
-          "acout": "$1"
-        },
-        {
-          "match": "\\s*EToday\\s*:\\s*([0-9]+\\.[0-9]+)kWh",
-          "actoday": "$1"
-        },
-        {
-          "match": "\\s*ETotal\\s*:\\s*([0-9]+\\.[0-9]+)kWh",
-          "actotal": "$1"
-        }
-     ]
- }, */  
 ?>
 <p style="font-size:18px"></b>
 

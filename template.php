@@ -31,7 +31,7 @@ function emitFooter() {
 ?>
   <div class="footnote">
    <p>Licensed under <a href="LICENSE">GPLv3</a>.
-      More info: <a href="https://github.com/infinityab/Rasptimer-Solar-Timer-Scheduler">https://github.com/infinityab/Rasptimer-Solar-Timer-Scheduler</a>.</p>
+      More info: <a href="https://github.com/infinityab/Solar-Timer-Scheduler">https://github.com/infinityab/Solar-Timer-Scheduler</a>.</p>
   </div>
 <?php
 }
