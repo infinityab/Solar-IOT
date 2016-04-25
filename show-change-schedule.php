@@ -35,7 +35,7 @@ if( isset( $_GET[$postPar]) && $_GET[$postPar] != '+Bump' && $_GET[$postPar] != 
        <option value="2">Schedule 2</option>
        <option value="3">Schedule 3</option>
        <option value="4">Schedule 4</option>
-      </select>
+      </select> <font color='blue'><b> <<< Select Schedule</b></font> 
    </p>
      <p>When run, run at
       <input type="text" name="timeOnHour" value="<?php printf( "%02d", isset( $schedule[$foundDeviceName]['timeOn']['hour'] ) ?

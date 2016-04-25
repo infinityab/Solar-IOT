@@ -1,4 +1,5 @@
-  <meta http-equiv="refresh" content="17">
+
+  <meta http-equiv="refresh" content="30">
 <p style="font-size:20px">
 <?php /* print "<b>Current status: </b>"; */ ?>
   <form method="POST">
@@ -6,18 +7,19 @@
 <?php
     $day = date("N");
 ?>
-<tr> <td><b> Appliance</td> <td><b>Status</td> <td><b>Auto</td> <td><b>Pwr</td><td>Manual </td><td> Manual Time </td>
-     <th>Timer Schedule 1</th>
-     <th>Timer Schedule 2</th>
-     <th>Timer Schedule 3</th>
-     <th>Timer Schedule 4</th>
+<tr> <td><font color='grey'><b> Appliance</td> <td><font color='grey'><b>Status</td> <td><b><font color='grey'>Auto</td>
+     <td><font color='grey'><b>Pwr</td><td><font color='grey'><b>Manual </td><td><font color='grey'><b> Manual Time </td>
+     <th><font color='grey'>Timer Schedule 1</th>
+     <th><font color='grey'>Timer Schedule 2</th>
+     <th><font color='grey'>Timer Schedule 3</th>
+     <th><font color='grey'>Timer Schedule 4</font></th>
 <?php
 
     foreach( $devices as $deviceName => $devicePin ) {
         $deviceStatus = exec( "/usr/local/bin/gpio read $devicePin[0]");   //  runGpio( "read", $devicePin[0] );
 ?>
      <tr>
-     <th><?php print( $deviceName ) ?></th>
+     <td><b><?php print( $deviceName ) ?></b></td>
      <td>
 <?php
         print( $deviceStatus ? "<font color='red'>On</font>" : "<font color='blue'>Off</font>" );
@@ -32,7 +34,6 @@
         print $devicePin[3];        // power requirement
 ?>
     </td><td>
-
       <input type="submit" name="<?php print( $deviceName ) ?>Action" value="<?php print( $deviceStatus ? "Turn off" : "Turn on" ) ?>"/>
      </td>
      <td>
@@ -56,7 +57,7 @@
      </td>
 
 <?php
-        $offset = 0;
+     $offset = 0;
      foreach( $schedules as $scheduleNums => $scheduleKey ) {
         $offset++;
 ?><td><?php

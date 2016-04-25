@@ -1,43 +1,49 @@
+
+<?php
+  startPhp();     // check for first start
+?>
 <script>
 resetTimer = false;
 timer = setInterval(function() {
     if(!resetTimer) {
-        document.getElementById('status').innerText = 'Refreshing';
+        document.getElementById('status').innerText = 'Refreshing'; 
         location.reload();
     }
     else {
         document.getElementById('status').innerText = 'Skip Refresh';
     }
     resetTimer = false;
-}, 30000);
+},300000);
 </script>
 
-<h2>Current Devices:</h2>
+<!-- <h2>Current Devices:</h2> -->
 
   <form method="POST">
    <table class="status">
     <tr>
-      <th align="left">Name</th>
-      <th>Pin</th>
-      <th>Status</th>
-      <th>Schedule Num</th>
-      <th>Power<br>Target</th>
-      <th>Auto</th>
-      <th>Susp</th>
-      <th>Light</th>
-      <th>Mon</th>
-      <th>Tue</th>
-      <th>Wed</th>
-      <th>Thu</th>
-      <th>Fri</th>
-      <th>Sat</th>
-      <th>Sun</th>
+      <th align="left"><font color='grey'>Appliances</th>
+      <th><font color='grey'>Pin</th>
+      <th><font color='grey'>Status</th>
+      <th><font color='grey'>Schedule Num</th>
+      <th><font color='grey'>Power</th>
+      <th><font color='grey'>Auto</th>
+      <th><font color='grey'>Susp</th>
+<!--  <th><font color='grey'>Light</th> -->
+      <th><font color='grey'>Mon</th>
+      <th><font color='grey'>Tue</th>
+      <th><font color='grey'>Wed</th>
+      <th><font color='grey'>Thu</th>
+      <th><font color='grey'>Fri</th>
+      <th><font color='grey'>Sat</th>
+      <th><font color='grey'>Sun</th>
    </tr>
 <tr>
 <?php
+//    exec('curl -d "d=20160321" -d "t=19:05" -d "v4=110" -d "v5=21.3" -H "X-Pvoutput-Apikey: b48740f4f30a7be6b44ca821f75554b2c28eea37" -H "X-Pvoutput-SystemId: 40003" "http://pvoutput.org/service/r2/addstatus.jsp" -0',$result);
     $j = strip_tags(file_get_contents($wifiget."4"));    //  eg 192.168.x.x/gpio/0" defined in config from meter server
 //    $res=checkPowerTargets($j); // check for power changes and action
-    reset($devices);
+
+reset($devices);
     $firstKey = key($devices);              // get first element so we only print 'schedule' once
     foreach( $devices as $deviceName => $devicePin ) {
 ?>   <th align="left"><?php print( $deviceName ) ?></th>
@@ -70,8 +76,8 @@ timer = setInterval(function() {
      </td><td>
 	<input type="checkbox" name="<?php print($devicePin[0]) ?>-Suspend" <?= $devicePin[4+($devicePin[2] * 10)]==1 ? "checked":""?> />
      </td><td>
-	<input type="checkbox" name="<?php print($devicePin[0]) ?>-Cloud" <?= $devicePin[1]==1 ? "checked":""?> />
-     </td><td>
+<!-- input type="checkbox" name="<?php print($devicePin[0]) ?>-Cloud" <?= $devicePin[1]==1 ? "checked":""?> />
+     </td><td> -->
 	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowMon" <?= $devicePin[6+($devicePin[2] * 10)]==1? "checked":""?> />
      </td><td>
 	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowTue" <?= $devicePin[7+($devicePin[2] * 10)]==1 ? "checked":""?> />
@@ -101,31 +107,48 @@ timer = setInterval(function() {
 <input type="submit" text="Submit" name="<?php print( $devicePin[0] ) ?>-Config" value="Submit Config"
      onclick="clearInterval(timer);document.getElementById('status').innerText = 'Submitted';"/>
 
-<? /*      <input type="submit" name="<?php print( $devicePin[0] ) ?>-Config" value="Submit Config"/>*/ ?>      <a href="">Cancel</a>
+<? /* <input type="submit" name="<?php print( $devicePin[0] ) ?>-Config" value="Submit Config"/>*/ ?> <a href="">Cancel</a>
 </td>
 </tr>
    </table>
 <p>
-<?php
-    require( 'emit-current-time.php' );
-    $poweravailable = getSmaPower();
-//    $j = strip_tags(file_get_contents($wifigridpwr));    //  eg 192.168.x.x/gpio/0" defined in config from meter server
-//    $res=checkPowerTargets($j);
-?>
+<script src="http://pvoutput.org/widget/inc.jsp"></script>
+
 <table class="status">
-    <td><h3><? print "Solar Surplus : ".$j." Watts".$res;?><td><td><td><td><h4>
-       <? $j = strip_tags(file_get_contents($wifiget."6"));
-            print $j;?></td><tr>
-    <td><h3>Solar Power Available : <? print ($poweravailable*1000)." Watts" ?><td><td><td><td><h4>
-       <? $j = strip_tags(file_get_contents($wifiget."7"));
-          print $j;?></td><tr>
-    <td><h3>Enter Power Lag : <input type="text" size="4" maxlength="4" name="powerreserve"
-        value="<?php print(  $powerReserve ) ?>"/> Watts<td><td><td><td><h4>
-        <?  $j = strip_tags(file_get_contents($wifiget."8"));
-            print $j;?></h4></td>
-</table>
+<td><script src="http://pvoutput.org/widget/graph.jsp?sid=40003&w=400&h=100&t=1&c=1"></script></td>
+<td><script src="http://pvoutput.org/widget/graph.jsp?sid=40003&w=400&h=100&t=1&consumption=1&e=1"></script></td>
+<td><script src="http://pvoutput.org/widget/outputs.jsp?sid=40003&h=100&barwidth=10&barspacing=2&c=2&n=1"></script> </td>
+<tr>
 
-<!---    <h3>Current Schedule : <? print ($devicePin[2]+1)?></h3> -->
+</tr></table><p> <!-- <table class="status"> -->
+<!-- <div style="width:1110px;" --> <!-- height:auto;position:relative;"> -->
 
- </form>
+<table class="status" width="300" border="0" align="left" cellpadding="0" cellspacing="0" style="margin-right:10px";>
+<td><script src="http://pvoutput.org/portlet/r1/getstatus.jsp?sid=40003"></script></td>
+</tr></table>
 
+<table class="status" width="800" border="0" align="left" cellpadding="0" cellspacing="0"; >
+<?php
+  $poweravailable = getSmaPower();
+  //    $j = strip_tags(file_get_contents($wifigridpwr));    //  eg 192.168.x.x/gpio/0" defined in config from meter server
+  //    $res=checkPowerTargets($j);
+?>
+   <td><b><? print "Solar Surplus : ".$j." Watts".$res;?></b><td>
+       <? $j = strip_tags(file_get_contents($wifigetw."6")); // temperature
+          print "Temperature ".$j; ?>
+<td></td>
+<tr>
+    <td><b>Solar Power : <? print ($poweravailable*1000)." Watts" ?></b><td>
+       <? $j = strip_tags(file_get_contents($wifigetw."7")); // barometric pressure
+          print "Pressure ".$j;  ?>
+<td></td>
+<tr>
+    <td><b>Power Lag : <input type="text" size="4" maxlength="4" name="powerreserve"
+        value="<?php print(  $powerReserve ) ?>"/> Watts</b><td>
+        <?  $j = strip_tags(file_get_contents($wifigetw."8"));   // humdity
+            print "Humidity ".$j;  ?>
+    </td>
+</tr></table><br><br><br><br>
+</form>
+ <? // var_dump($GLOBALS);  // for debug
+ ?>

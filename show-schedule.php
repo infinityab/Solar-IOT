@@ -1,5 +1,5 @@
 
-<meta http-equiv="refresh" content="60">
+<meta http-equiv="refresh" content="45">
 <p style="font-size:20px">
 
 <?php
@@ -7,8 +7,8 @@
     $space="";      // dummy
     $poweravailable = getSmaPower();
     if(!$poweravailable) $poweravailable = getSmaPower();      // try again if zero or null
-    print "<b>Active Schedule </b>below".$space;
-    print (" | " ); require( 'emit-current-time.php' ); ?><p></p>
+//    print "<b>Active Schedule </b>below".$space;
+//    print (" | " ); require( 'emit-current-time.php' ); ?><p></p>
 
   <form method="GET">
   <table class="schedule">
@@ -27,7 +27,7 @@
     foreach( $devices as $deviceName => $devicePin ) {
 ?>
      <tr>
-     <th><?php print( $deviceName ) ?> daily at:</th>
+     <td><b><?php print( $deviceName ) ?></b><font color='grey'> active schedule:</font></td>
      <td>
 <?php
         if( isset( $schedule[$deviceName]['timeOn'] )) {
@@ -45,7 +45,7 @@
      </td><td>
       <input type="submit" name="<?php print( $deviceName ) ?>Action" value="+Bump" />
      </td><td>
-      <input type="submit" name="<?php print( $deviceName ) ?>Action" value="-Bump" />
+ <!--     <input type="submit" name="<?php print( $deviceName ) ?>Action" value="-Bump" />  wont work with multi schedules --> 
     </td><td>
 
        <p style="font-size:22px"><b>
@@ -56,15 +56,15 @@
             print "Solar Power : ".($poweravailable * 1000)." Watts";
         } elseif ( $pass == 3) {
             print "Power Lag : ".$powerReserve." Watts";
-        } elseif ( $pass == 4) {
-        $j = strip_tags(file_get_contents($wifiget."6"));
+        }  elseif ( $pass == 4) {
+        $j = strip_tags(file_get_contents($wifigetw."6"));
             print $j;
         } elseif ( $pass == 5) {
-        $j = strip_tags(file_get_contents($wifiget."7"));
+        $j = strip_tags(file_get_contents($wifigetw."7"));
             print $j;
         } elseif ( $pass == 6) {
-        $j = strip_tags(file_get_contents($wifiget."8"));
-            print $j;
+        $j = strip_tags(file_get_contents($wifigetw."8"));
+            print $j; 
 //        } elseif ( $pass == 7) {
 //        $j = strip_tags(file_get_contents($wifiget."9"));
  //           print $j;
