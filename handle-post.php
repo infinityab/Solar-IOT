@@ -64,11 +64,6 @@
 		           $deviceName . "\" => array(" . 
 					$devicePin[0].",");					// device pin 0 - Gpio pin number
                  fwrite($handle_out, ($_POST[$CloudPar]=="on"?"1":"0").",");          # Cloud 
-//               if ($_POST[$devicePin[0]."-Auto"] == "") {        // Auto Powerty
-//                     fwrite($handle_out, (0).",");
-//                    } else {
-//                    fwrite($handle_out, ($_POST[$devicePin[0]."-Auto"]).",");         # device pin 1 Exclusive Priority
-//                    }
 			   if( isset( $_POST[$SchedulePar] ) && $_POST[$SchedulePar] != $devicePin[2] ) {   //  schedule to be  set
 				fwrite($handle_out, $SchedPost.",");
 			   } else {
@@ -87,8 +82,6 @@
                     } else {
                     fwrite($handle_out, ($_POST[$devicePin[0]."-Auto"]).",");         # device pin $
                     }
-
-//		    	   fwrite($handle_out, ($_POST[$CloudPar]=="on"?"1":"0").",");		    # Cloud device pin 5
                    fwrite($handle_out, ($_POST[$DowMon]=="on"?"1":"0").",");            # device pin 6 S1 Mon - Day 1
                    fwrite($handle_out, ($_POST[$DowTue]=="on"?"1":"0").",");            # device pin 7 S1 Tue
                    fwrite($handle_out, ($_POST[$DowWed]=="on"?"1":"0").",");            # device pin 8 S1 Wed
@@ -114,8 +107,6 @@
                     } else {
                     fwrite($handle_out, ($_POST[$devicePin[0]."-Auto"]).",");         # device pin $
                     }
-
-//                           fwrite($handle_out, ($_POST[$CloudPar]=="on"?"1":"0").",");          # S2 Cloud device pin 15
                            fwrite($handle_out, ($_POST[$DowMon]=="on"?"1":"0").",");            # S2 device pin 16  Mon - Day 1
                            fwrite($handle_out, ($_POST[$DowTue]=="on"?"1":"0").",");            # S2 device pin 17 Tue
                            fwrite($handle_out, ($_POST[$DowWed]=="on"?"1":"0").",");            # S2 device pin 18 Wed
@@ -141,8 +132,6 @@
                     } else {
                     fwrite($handle_out, ($_POST[$devicePin[0]."-Auto"]).",");         # device pin $
                     }
-
-//                           fwrite($handle_out, ($_POST[$CloudPar]=="on"?"1":"0").",");          # Cloud device pin 25
                            fwrite($handle_out, ($_POST[$DowMon]=="on"?"1":"0").",");            # device pin 26 S2 Mon - Day 1
                            fwrite($handle_out, ($_POST[$DowTue]=="on"?"1":"0").",");            # device pin 27 S2 Tue
                            fwrite($handle_out, ($_POST[$DowWed]=="on"?"1":"0").",");            # device pin 28 S2 Wed
@@ -168,8 +157,6 @@
                     } else {
                     fwrite($handle_out, ($_POST[$devicePin[0]."-Auto"]).",");         # device pin $
                     }
-
-//                           fwrite($handle_out, ($_POST[$CloudPar]=="on"?"1":"0").",");          # Cloud device pin 35
                            fwrite($handle_out, ($_POST[$DowMon]=="on"?"1":"0").",");            # device pin 36 S2 Mon - Day 1
                            fwrite($handle_out, ($_POST[$DowTue]=="on"?"1":"0").",");            # device pin 37 S2 Tue
                            fwrite($handle_out, ($_POST[$DowWed]=="on"?"1":"0").",");            # device pin 38 S2 Wed

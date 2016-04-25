@@ -17,7 +17,7 @@ div.footnote {
 }
 
 div.h1 {
-    padding: 3px 30px;
+    padding: 3px 25px;
     background: #f0f0f0;
 }
 h2 {
@@ -39,12 +39,12 @@ table.status th,
 table.status td,
 table.schedule th,
 table.schedule td {
-    padding: 5px 12px;
+    padding: 3px 12px;  /* 5px */
 }
 
 div.footnote {
     font-size: small;
-    margin-top: 40px;
+    margin-top: 40px;   /* 40 */
 }
 div.footnote > p {
     border-top: 1px solid #d0d0d0;
@@ -151,7 +151,9 @@ div.graphic-log span.d5 {
 div.graphic-log span.d6 {
     background: #FDE835
 }
-
+div.graphic-log span.d7 {
+    background: #EE0000
+}
 div.graphic-log div.bar > span.d0 {
     top: 0;
 }
@@ -173,5 +175,23 @@ div.graphic-log div.bar > span.d5 {
 div.graphic-log div.bar > span.d6 {
     top: 120px;
 }
+div.graphic-log div.bar > span.d7 {
+    top: 140px;
+}
 
 /* possibly add colors for more devices */
+
+#pv_title {
+   font-size: 0; // 1.25em;
+}
+
+#pv_energy_label, #pv_power_label, #pv_gss_label, #pv_temperature_label, #pv_voltage_label {
+   font-weight: bold;
+   font-size: 0.8em; // 1.05em
+}
+
+#pv_timestamp {
+   padding-top: 5px;
+   font-size: 14px;
+} 
+

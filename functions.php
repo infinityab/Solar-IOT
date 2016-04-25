@@ -24,14 +24,18 @@ function wifiCheck($pin,$onoff) {
         $json_string = file_get_contents($wifi7[1].$onoff);   // to start and stop external fan for aircon boost
         logEvent( $wifi7[0],$onoff);
     } elseif ( $pin == $wifi3[0]) {   // wireless socket #1 only
-        $json_string = file_get_contents($wifi3[1].$onoff);
-
+        $json_string = file_get_contents($wifi3[1].$onoff);  // downstairs wireless relay point
+        $json_string = file_get_contents($wifi6[1].$onoff);  // upstairs wireless relay point
+        $json_string = file_get_contents($wifi9[1].$onoff);  // meter box wireless relay point
     } elseif ( $pin == $wifi4[0]) {   // wireless socket #2 only
         $json_string = file_get_contents($wifi4[1].$onoff);
+        $json_string = file_get_contents($wifi7[1].$onoff);
+        $json_string = file_get_contents($wifi10[1].$onoff);
 
     } elseif ( $pin == $wifi5[0]) {   // wireless socket #3 only
-       $json_string = file_get_contents($wifi5[1].$onoff);
-
+        $json_string = file_get_contents($wifi5[1].$onoff);
+        $json_string = file_get_contents($wifi8[1].$onoff);
+        $json_string = file_get_contents($wifi11[1].$onoff);
 // **    } elseif ( $pin == $wifi6[0]) {   // ALL wireless sockets ON or OFF
 // **        $json_string = file_get_contents($wifi4[1].$onoff);
     }
@@ -177,9 +181,8 @@ function checkPowerTargets($currentpower) {
 
     include( 'config.php');
     include( 'config2.php');
-//    $currentpower = strip_tags($currentpower); // strip out HTML junk
+//    $currentpower = strip_tags($currentpower); // strip out HTML junk - commented out now as already done
     $a = $currentpower." ";
-//    $currentpower += $powerReserve;     // first deduct any power reserve (for fridges, computer equip  etc)
     $b = $currentpower." ";
     $prioritylog = array();
     $devicelog = array();               // reset everything
@@ -204,7 +207,6 @@ function checkPowerTargets($currentpower) {
                   (($x-1)*10)] && !$devices[$deviceName][4+(($x-1)*10)] ) {   // within time now, indexed DOW and NOT suspend
                     $devicepower += $devicePin[3+(($x-1)*10)];          // build devices ON list
                     $devicelog[$totd][0] = $devicePin[0];   // Device Wiring Pin number
-                  //  $devicelog[$totd][1] = $devicePin[3+(($x-1)*10)];   // Power requirement
                     $devicelog[$totd][1] = $devicePin[3];   // Power requirement - 1st position only Not indexed
                     ++$totd;
                     break;
@@ -219,8 +221,7 @@ function checkPowerTargets($currentpower) {
                 if ( ($timenowps <= $timeNow && $timeNow <= $timenowpe) &&  $devices[$deviceName][5+(date("N"))+
                   (($x-1)*10)] && !$devices[$deviceName][4+(($x-1)*10)] ) {   // within time now, indexed DOW and suspend
                     $prioritylog[$totp][0] = $devicePin[5];   // Priority setting
-                   $prioritylog[$totp][1] = $devicePin[3];  // power requirement 1st position only NOT indexed
-                    //  $prioritylog[$totp][1] = $devicePin[3+(($x-1)*10)];   // Power requirement
+                    $prioritylog[$totp][1] = $devicePin[3];  // power requirement 1st position only NOT indexed
                     $prioritylog[$totp][2] = $devicePin[0];   // Pin Number
                     ++$totp;
                     break;
@@ -263,9 +264,9 @@ $c = $currentpower." ";
             if (!$prioritylog[$x][3]) {      // device is OFF
                 if($currentpower - $prioritylog[$x][1] >= 0) {
                     $currentpower -= $prioritylog[$x][1];
-                    $devcount = count($devicelog);  // sufficeient power so add to device ON list
-                    $devicelog[$devcount][0] = $prioritylog[$x][2];     // pin# update $device list withAuto device
-                    $devicelog[$devcount][1] = $prioritylog[$x][1];     // pwr - priority required to trigger logevent
+                    $devcount = count($devicelog);  // sufficient power so add to device ON list
+                    $devicelog[$devcount][0] = $prioritylog[$x][2];     // pin# update $device list with Auto device
+                    $devicelog[$devcount][1] = $prioritylog[$x][1];     // pwr
                     exec( "/usr/local/bin/gpio write $pin 1");       // switch on device surplus power available
                     wifiCheck($pin,1);
                     logEvent( $pin,"1");
@@ -591,6 +592,7 @@ function printLogFileLines( $url, $page ) {
     if( count( $logFiles ) > 1  ) {
         print "<ul class=\"log-files\">\n";
 
+// for( $i=count($logfiles); $i >= 1; --$i ) {
         for( $i=0 ; $i<count( $logFiles ) ; ++$i ) {
             if( $logFile == $logFiles[$i] ) {
                 $selected = !isset( $page ) ? " class=\"selected\"" : "";

@@ -9,17 +9,16 @@ $title = "Solar Timer Scheduler";
 //                            0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,1,2
 //                            p,L,s,d,s,a,m,t,w,t,f,s,s,d,s,a,m,t,w,t,f,s,s,d,s,a,m,t,w,t,f,s,s,d,s,a,m,t,w,t,f,s,s
 $devices = array(
-    "Hot Water Main" => array(6,0,0,2000,0,1,1,0,0,0,1,0,0,2400,0,0,0,1,1,1,0,1,1,2400,1,0,1,1,1,1,1,1,1,2000,0,1,1,1,1,1,1,1,1),
-    "Pool Pump" => array(5,0,0,1500,0,2,1,1,1,1,1,0,0,1500,0,0,0,0,0,0,0,1,1,1500,1,2,1,1,1,1,1,1,1,1500,0,2,1,1,1,1,1,1,1),
+    "Hot Water Main" => array(6,0,0,2400,0,0,1,0,0,0,1,0,0,2400,0,0,0,1,1,1,0,1,1,2400,1,1,1,1,1,1,1,1,1,2400,1,1,1,1,1,1,1,1,1),
+    "Pool Pump" => array(5,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0,1,1,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0),
     "Enviro Pump" => array(10,0,0,70,0,0,1,1,1,1,1,1,1,70,0,0,1,1,1,1,1,1,1,70,1,0,1,1,1,1,1,1,1,70,0,0,1,1,1,1,1,1,1),
-    "Wireless Skt1" => array(11,0,0,600,1,0,1,1,1,1,1,1,1,40,1,0,1,1,1,1,1,1,1,600,1,0,1,1,1,1,1,1,1,40,1,0,1,1,1,1,1,1,1),
-    "Wireless Skt2" => array(3,0,0,40,1,0,1,1,1,1,1,1,1,40,1,0,1,1,1,1,1,1,1,40,1,0,1,1,1,1,1,1,1,40,1,0,1,1,1,1,1,1,1),
-    "Wireless Skt3" => array(1,0,0,40,1,0,1,1,1,1,1,1,1,0,1,0,0,0,1,0,0,1,1,40,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1),
-    "WiFi1 Air-Heat" => array(4,0,0,1750,1,3,1,1,1,1,1,1,1,1750,1,3,1,1,1,1,1,1,1,1750,1,3,0,0,0,0,0,1,0,1750,1,3,1,1,1,1,1,1,1),
-    "WiFi2 Air-Heat" => array(0,0,0,1050,1,4,1,1,1,1,1,1,1,1050,1,4,1,1,1,1,1,1,1,1050,1,4,0,0,0,0,0,1,0,1050,1,4,1,1,1,1,1,1,1),
+    "Wireless Pwr1" => array(11,0,0,60,1,0,1,1,1,1,1,1,1,399,1,0,1,1,1,1,1,1,1,60,1,0,1,1,1,1,1,1,1,60,1,0,1,1,1,1,1,1,1),
+    "Wireless Pwr2" => array(3,0,0,0,1,0,1,1,1,1,1,1,1,0,1,0,0,0,1,0,0,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1),
+    "Aircon WiFi-1" => array(4,0,0,1200,0,2,1,1,1,1,1,1,1,1200,1,2,1,1,1,1,1,1,1,1200,1,2,0,0,0,0,0,1,0,1200,1,2,1,1,1,1,1,1,1),
+    "Aircon WiFi-2" => array(0,0,0,800,1,3,1,1,1,1,1,1,1,800,1,3,1,1,1,1,1,1,1,800,1,3,0,0,0,0,0,1,0,800,1,3,1,1,1,1,1,1,1),
 );
 
-$powerReserve = 600;
+$powerReserve = 1000;
                 //  Power Reserve is deducted from the available solar power before any Priority calculations are made
 // $wirelessDevs = array( array(11,0),array(3,0),array(1,0));    // wireless devices pin number, 0 (Off) - set to null if not used
 // $gridpower = 0.123;
@@ -39,7 +38,7 @@ $wifi10 = array (3,"http://192.168.0.116/wireless/22/");     // socket #2 for 43
 $wifi11 = array (1,"http://192.168.0.116/wireless/23/");     // socket #3 for 433Mhz wireless not WiFi
 // note that wireless 24 is ALL OFF or ALL ON but not used automatically
 $wifiget = "http://192.168.0.116/gpio/";   // meter power from esp8266 micro server
-$wifigetw = "http://192.168.0.114/gpio/";   // meter power from esp8266 micro server
+
 // Where to log events. This file must be writeable by the webserver user, e.g. "chown www-data /var/log/rasptimer.log"
 $logFile = "/var/log/rasptimer.log";
 
