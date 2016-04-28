@@ -53,10 +53,7 @@
       </select>
 <?php
         }
-?>
-     </td>
-
-<?php
+?></td><?
      $offset = 0;
      foreach( $schedules as $scheduleNums => $scheduleKey ) {
         $offset++;

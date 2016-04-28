@@ -1,12 +1,12 @@
 
 <?php
-  startPhp();     // check for first start
+  startPhp();     // check for first start and reset all devices to OFF
 ?>
 <script>
 resetTimer = false;
 timer = setInterval(function() {
     if(!resetTimer) {
-        document.getElementById('status').innerText = 'Refreshing'; 
+        document.getElementById('status').innerText = 'Refreshing';
         location.reload();
     }
     else {
@@ -15,16 +15,23 @@ timer = setInterval(function() {
     resetTimer = false;
 },300000);
 </script>
-
-<!-- <h2>Current Devices:</h2> -->
-
+<?php
+    $day = date("N");
+    foreach( $schedules as $scheduleNums => $scheduleKey ) {  // populate Schedules
+       foreach( $scheduleKey as $deviceNames => $devicePins ) {
+       }
+    }
+    $schedule = readCrontab(); // read in active schedule
+    $Schedule = checkSchedules( $schedule );  // check and bump schedules if necessary
+    writeCrontab($Schedule);
+?>
   <form method="POST">
    <table class="status">
     <tr>
       <th align="left"><font color='grey'>Appliances</th>
       <th><font color='grey'>Pin</th>
       <th><font color='grey'>Status</th>
-      <th><font color='grey'>Schedule Num</th>
+      <th><font color='grey'>Scheduled For</th>
       <th><font color='grey'>Power</th>
       <th><font color='grey'>Auto</th>
       <th><font color='grey'>Susp</th>
@@ -33,38 +40,36 @@ timer = setInterval(function() {
       <th><font color='grey'>Tue</th>
       <th><font color='grey'>Wed</th>
       <th><font color='grey'>Thu</th>
-      <th><font color='grey'>Fri</th>
-      <th><font color='grey'>Sat</th>
-      <th><font color='grey'>Sun</th>
-   </tr>
-<tr>
+      <th align="left"><font color='grey'>Fri</th>
+      <th align="left"><font color='grey'>Sat</th>
+      <th align="left"><font color='grey'>Sun</th>
+      <th align="left"><font color='grey'>Show Schedule <? print (($devices[$deviceNames][2])+1) ?></th>
+  </tr><tr>
 <?php
 //    exec('curl -d "d=20160321" -d "t=19:05" -d "v4=110" -d "v5=21.3" -H "X-Pvoutput-Apikey: b48740f4f30a7be6b44ca821f75554b2c28eea37" -H "X-Pvoutput-SystemId: 40003" "http://pvoutput.org/service/r2/addstatus.jsp" -0',$result);
     $j = strip_tags(file_get_contents($wifiget."4"));    //  eg 192.168.x.x/gpio/0" defined in config from meter server
 //    $res=checkPowerTargets($j); // check for power changes and action
 
-reset($devices);
+    reset($devices);
     $firstKey = key($devices);              // get first element so we only print 'schedule' once
     foreach( $devices as $deviceName => $devicePin ) {
-?>   <th align="left"><?php print( $deviceName ) ?></th>
-     <td><?php print( $devicePin[0] )?></th><?
-     $deviceStatus = exec( "/usr/local/bin/gpio read $devicePin[0]");?><td><?
-     print( $deviceStatus ? "<font color='red'>On</font>" : "<font color='blue'>Off</font>" );?></td><?
-     if ( $devices[$firstKey][0] == $devicePin[0]) {  ?>
-<td>
-	 for
-        <select name="<?php print($devicePin[0]) ?>-ScheduleConf" onChange="this.form.submit()">
-            <option value="0" <?= $devicePin[2]==0 ? "selected":""?>>Schedule 1</option>
-            <option value="1" <?= $devicePin[2]==1 ? "selected":""?>>Schedule 2</option>
-            <option value="2" <?= $devicePin[2]==2 ? "selected":""?>>Schedule 3</option>
-	        <option value="3" <?= $devicePin[2]==3 ? "selected":""?>>Schedule 4</option>
-      </select>
-     </td>
-<?php
-   } else {
-?><td></td><?
- }
+?>      <th align="left"><?php print( $deviceName ) ?></th>
+        <td><?php print( $devicePin[0] )?></th><?
+        $deviceStatus = exec( "/usr/local/bin/gpio read $devicePin[0]");?><td><?
+        print( $deviceStatus ? "<font color='red'>On</font>" : "<font color='blue'>Off</font>" );?>
+        </td><td>
+<?
+            if( isset( $schedule[$deviceName]['timeOn'] )) {
+            printf( "%02d:%02d for %02d:%02d",
+                    $schedule[$deviceName]['timeOn']['hour'],
+                    $schedule[$deviceName]['timeOn']['min'],
+                    $schedule[$deviceName]['duration']['hour'],
+                    $schedule[$deviceName]['duration']['min'] );
+        } else {
+            print "not scheduled";
+        }
 ?>
+</td>
     <td>
      <input type="text" size="4" maxlength="4" max="4000" name="<?php print( $devicePin[0] ) ?>-Power" value="<?        // set power target
           printf(isset ($devicePin[3]) ? $devicePin[3] : 0);?>" />
@@ -91,26 +96,56 @@ reset($devices);
 	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowSat" <?= $devicePin[11+($devicePin[2] * 10)]==1 ? "checked":""?> />
      </td><td>
 	<input type="checkbox" name="<?php print($devicePin[0]) ?>-DowSun" <?= $devicePin[12+($devicePin[2] * 10)]==1 ? "checked":""?> />
-     </td>
-</tr>
+     </td><td>
 <?php
+           if( $schedules["Schedule-".($devicePin[2]+1)][$deviceName][2] != 0 ) {
+               if ($devicePin[5+$day+($devicePin[2]*10)] && !$devicePin[4]) {
+                    print "<font color='blue'>";
+                    }
+                        else
+                    {
+                    print "<font color='black'>";
+                    }
+                printf( "%02d:%02d for %02d:%02d",
+                $schedules["Schedule-".($devicePin[2]+1)][$deviceName][3],
+                $schedules["Schedule-".($devicePin[2]+1)][$deviceName][4],
+                $schedules["Schedule-".($devicePin[2]+1)][$deviceName][5],
+                $schedules["Schedule-".($devicePin[2]+1)][$deviceName][6]);
+                print "</font>";
+            } else {
+                print "<font color='black'>";
+                print "not scheduled";
+                print "</font>";
+           }
+?></td></tr><?
 }
 ?>
 <tr>
  <td colspan="4">
-
 </td><tr><tr><tr><td>
 
 <!-- <input onkeyup="resetTimer = true"> -->
  <div id="status">
  </div>
 <input type="submit" text="Submit" name="<?php print( $devicePin[0] ) ?>-Config" value="Submit Config"
-     onclick="clearInterval(timer);document.getElementById('status').innerText = 'Submitted';"/>
+     onclick="clearInterval(timer);document.getElementById('status').innerText = 'Submitted';"/><a href="">Cancel</a>
 
-<? /* <input type="submit" name="<?php print( $devicePin[0] ) ?>-Config" value="Submit Config"/>*/ ?> <a href="">Cancel</a>
+<? /* <input type="submit" name="<?php print( $devicePin[0] ) ?>-Config" value="Submit Config"/> <a href="">Cancel</a> */ ?>
 </td>
+<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td>Show</td>
+            <td>
+            <select name="<?php print($devicePin[0]) ?>-ScheduleConf" onChange="this.form.submit()">
+            <option value="0" <?= $devicePin[2]==0 ? "selected":""?>>Schedule 1</option>
+            <option value="1" <?= $devicePin[2]==1 ? "selected":""?>>Schedule 2</option>
+            <option value="2" <?= $devicePin[2]==2 ? "selected":""?>>Schedule 3</option>
+            <option value="3" <?= $devicePin[2]==3 ? "selected":""?>>Schedule 4</option>
+            </select>
+            </td>
 </tr>
-   </table>
+    </table>
+        <table class="status" width="100" border="0" align="left" cellpadding="0" cellspacing="0"; >
+    </tr></table>
 <p>
 <script src="http://pvoutput.org/widget/inc.jsp"></script>
 
@@ -135,18 +170,18 @@ reset($devices);
 ?>
    <td><b><? print "Solar Surplus : ".$j." Watts".$res;?></b><td>
        <? $j = strip_tags(file_get_contents($wifigetw."6")); // temperature
-          print "Temperature ".$j; ?>
+          print "Temperature : ".$j; ?>
 <td></td>
 <tr>
     <td><b>Solar Power : <? print ($poweravailable*1000)." Watts" ?></b><td>
        <? $j = strip_tags(file_get_contents($wifigetw."7")); // barometric pressure
-          print "Pressure ".$j;  ?>
+          print "Pressure : ".$j;  ?>
 <td></td>
 <tr>
     <td><b>Power Lag : <input type="text" size="4" maxlength="4" name="powerreserve"
         value="<?php print(  $powerReserve ) ?>"/> Watts</b><td>
         <?  $j = strip_tags(file_get_contents($wifigetw."8"));   // humdity
-            print "Humidity ".$j;  ?>
+            print "Humidity : ".$j;  ?>
     </td>
 </tr></table><br><br><br><br>
 </form>

@@ -7,18 +7,13 @@
     $space="";      // dummy
     $poweravailable = getSmaPower();
     if(!$poweravailable) $poweravailable = getSmaPower();      // try again if zero or null
-//    print "<b>Active Schedule </b>below".$space;
-//    print (" | " ); require( 'emit-current-time.php' ); ?><p></p>
-
-  <form method="GET">
-  <table class="schedule">
+?>
+    <form method="GET">
+    <table class="schedule">
 <?php
     $schedule = readCrontab();
-//    $timeOut = (date("H")*60) + date("i");
-//    if(!( $timeOut ) ) {                 // i.e midnight time rollover
-        $Schedule = checkSchedules( $schedule );  // check and bump schedules if necessary
-        writeCrontab($Schedule);
-//    }
+    $Schedule = checkSchedules( $schedule );  // check and bump schedules if necessary
+    writeCrontab($Schedule);
     $pass = 1;
     $j = strip_tags(file_get_contents($wifiget."4"));    //  eg 192.168.x.x/gpio/0" defined in config from meter server
 //    $res = checkPowerTargets($j);   // check for any power changes and action
@@ -43,9 +38,9 @@
      </td><td>
       <input type="submit" name="<?php print( $deviceName ) ?>Action" value="Change schedule" />
      </td><td>
-      <input type="submit" name="<?php print( $deviceName ) ?>Action" value="+Bump" />
+<!--      <input type="submit" name="<?php print( $deviceName ) ?>Action" value="+Bump" /> -->
      </td><td>
- <!--     <input type="submit" name="<?php print( $deviceName ) ?>Action" value="-Bump" />  wont work with multi schedules --> 
+<!--      <input type="submit" name="<?php print( $deviceName ) ?>Action" value="-Bump" />  wont work with multi schedules -->
     </td><td>
 
        <p style="font-size:22px"><b>
@@ -64,10 +59,7 @@
             print $j;
         } elseif ( $pass == 6) {
         $j = strip_tags(file_get_contents($wifigetw."8"));
-            print $j; 
-//        } elseif ( $pass == 7) {
-//        $j = strip_tags(file_get_contents($wifiget."9"));
- //           print $j;
+            print $j;
         }
         ++$pass;
     }
