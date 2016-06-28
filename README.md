@@ -1,26 +1,27 @@
 Solar IOT
 =========
 
-Use Raspberry Pi as a controller for Auto or Timer switching with choices of activation using WiFi, Wireless and/or Contacter relay, monitored and configurable over your local network by PC, tablet or smartphone.
+Use Raspberry Pi as a controller alongside SBFspot for Auto or Timer switching appliances with choices of activation using WiFi, Wireless and/or Contactor relay, monitored and configurable over your local network by PC, tablet or smartphone.
 
-This was originally based on the Rasptimer pool timer project conceived by Johannes Ernst and described at http://upon2020.com/blog/2012/12/my-raspberry-pi-pool-timer-why/. It uses the core of this with major additions in this version to make it a fully fledged multi-schedule timer controller with auto power management for solar applications. It can control as many appliances/devices as there are Pi GPIO ports available, so at least a minimum of 8 appliances.
+This was originally based on Johannes Ernst's Poool Timer and described at http://upon2020.com/blog/2012/12/my-raspberry-pi-pool-timer-why/. It uses the core of this with major changes and additions to make it a fully fledged multi-schedule timer controller with auto power management for solar applications. It can control as many appliances/devices as there are Pi GPIO ports available, so about 12 appliances.
 
-This should run on any Linux-based OS, although installation instructions were written for raspbian. You just need Apache Server and WiringPi, PHP is used for the server side application.
+This should run on any Linux-based OS, although installation instructions are written for raspbian. You just need Apache Server and WiringPi, PHP is used for the server side application.
 
-You can schedule appliances connected by any of the above methods to be on and off at up to 5 arbitrary times throughout any day or days of a week. Appliances may also be manually switched on and off or suspended from running. Any appliances may be set for auto power management (APM) as well which will operate when there is any excess solar power available. There is also a graphical log which was part of the original core with some minor changes. See screenshot examples.
+You can schedule appliances connected by any of the above methods to be on and off at up to 5 arbitrary times throughout any day or days of a week. Appliances may also be manually switched on and off or suspended from running. Any appliances may be set for auto power management (APM) as well which will operate when there is any excess solar power available. There is also a graphical log which was part of the original core with some extensions and minor changes. See screenshot examples.
 
-SMA Inverter solar data and actual total power consumption from the electricity meter may also extracted and displayed on the timer for APM.
+SMA Inverter solar data and actual total power consumption from the electricity meter is also extracted and displayed on the timer for APM and sent to PVoutput.
 
-The Pi header pins are buffered and inverted with a 74HFC04 inverter to drive optically isolated 4 x relay module boards thus providing 4-8 240V/110V AC switchable outlets which in turn can directly drive appliances or trigger contactors. Also remote appliances may be driven by WiFi client units with relays or by Wireless sockets (see below). Be aware that ratings quoted on relays are for resistive loads, inductive loads will be about a quarter of that. See directory hardware. The HFC version inverter is selected because it has input clamping for 3v3 operation to match the Pi GPIO pins rating.
+The Pi header pins are buffered and inverted with a 74HFC04 inverter to drive optically isolated 4 x relay module boards thus providing 4-8 240V/110V AC switchable outlets which in turn can directly drive appliances or trigger contactors. Also remote appliances may be driven by WiFi client units with relays or by Wireless sockets (see below). Be aware that ratings quoted on relays are for resistive loads, inductive loads will be about a quarter of that. See the hardware folder. The 74HFC04 version inverter is selected because it has input clamping for 3v3 operation to match the Pi GPIO pins rating, it is not absolutely essential to use this but it does offer additional Pi protection and has the advantage of inverting the driver signal to the traditional 0=OFF 1=ON.
 
-Wireless driven AC sockets may also be triggered anywhere on the premises using a wireless cell structure within the premises built into the wifi client units as wireless relay points. This can be used to switch any plug driven mobile appliance such as heaters etc. A major hardware store pack of wireless sockets was used although probably any other will work. See details in screenshots folder. The wireless codes used on the wireless sockets are discovered using Arduino/ESP8266 RCSwitch software.
+Wireless driven AC sockets may also be triggered anywhere on the premises using a wireless cell structure within the premises built into the wifi client units as wireless relay points. This can be used to switch any plug driven mobile appliance such as heaters etc. A standard hardware store pack of wireless sockets was used although probably any other will work. See details in screenshots folder. The wireless codes used on the wireless sockets are discovered using the Arduino desktop frontend software with an ESP8266 RCSwitch software and 433MHZ receiver attached. These are cheap devices costing about $1 or so.
 
-For Solar users - If you have installed the Power Meter project to constantly update the current power consumption then Auto Power Management may be optionally used, this works extremely well. The Auto Power Magagement feature allows the user to set a power target to reach before an APM appliance/device is switched on and this can be done via Wifi, Wireless or directly by contacter switching - it just depends on the way you have set it up. Every appliance that is to be included in the power calculation needs to have a power target entered. So for instance water heater 2400 watts #1 priority, Fan Heater 1000W (by wireless) or AirCon 1800W (by WiFi) so these could be set to #2 priority, pool pump 1200W this set to say #3 priority. Priority (the Auto#) dictates the order of power calculation. Thus in this example once the water heater power is used up and there is still surplus solar the calculation can be carried forward and if say 1Kw surplus is available a signal is transmitted to the wireless socket for the heater and it switches on. This is recalculated at 3 minute interval (settable) so if the power drops it will be commanded to switch off. In practice this all works perfectly and like magic with appliances going on and off according to the power available and note there is an OFF hysterisis in the calculation (settable as Power Lag). In summer for a small air conditioner a WiFi unit is used. The aircon is placed in standby and the WiFi units relay connected across the start switch (for LV use just a cut in half USB extender lead for plug and socket) and a pulse command is sent (simulating a press of the start button) - simple but effective. 
+For Solar users - If you have installed the Power Meter project to constantly update the current power consumption then Auto Power Management may be optionally used, this works extremely well. The Auto Power Magagement feature allows the user to set a power target to reach before an APM appliance/device is switched on and this can be done via Wifi, WiFi-Wireless or directly by contactor switching - it just depends on the way you have set it up. Every appliance that is to be included in the power calculation needs to have a power target  and a power trigger point entered. So for instance water heater 2400 watts #1 priority, Fan Heater 1000W (by wireless) or AirCon 1800W (by WiFi) so these could be set to #2 priority, pool pump 1200W this set to say #3 priority. Priority (the Auto #) dictates the order of power calculation. Thus in this example once the water heater power is used up and there is still surplus solar the calculation can be carried forward and if say 1Kw surplus is available a signal is transmitted to the wireless socket for the heater and it switches on. This is recalculated at 3 minute interval (settable) so if the power drops it will be commanded to switch off. In practice this all works perfectly and like magic with appliances going on and off according to the power available and note there is an OFF hysterisis in the calculation (settable as Power Lag), the trigger power for each device is the ON hysterisis. In summer for a small air conditioner a WiFi unit is used. The aircon is placed in standby and the WiFi units relay connected across the start switch (for LV use just a cut in half USB extender lead for plug and socket) and a pulse command is sent (simulating a press of the start button) - simple but effective. 
 
 Power Lag - this is basically the OFF hysterisis of the power calculation. So after making an allowance of say 500W for appliances like fridges, deep freeze which you have no control over, etc if the appliance that is ON is using say 2400W and the the Lag is 500W then the power available for the calculation to switch the appliance OFF is 2900W. So if the consumption suddenly rises by say 300W due to a fridge starting up then there will still be enough power in the calculation to keep the appliance ON thus reducing the possible yoyoing OFF-ON-OFF-ON effect.
 
 Installing the Software 
-First install Raspbian and wifi network drivers if required - see Raspberry Pi site for details, PUTTY may also be useful to access Pi remotely. Then -
+Firstly make an image of your existing SD/TF card memory using the free WinDskMgr utility and make it a habit of keeping images of the Pi whenever you do a major change to the Pi memory so you can always fallback. Note use cards that are identical in size.
+Leave your SBFspot software on the Pi flash card and install Raspbian and wifi network drivers if they are not installed already - see Raspberry Pi site for details, PUTTY software is also extremely useful to access Pi remotely. Then connect and type -
 
 Installation:
     
@@ -35,19 +36,20 @@ Installation:
     make
     sudo make install
     cd /var/www
-    sudo git clone https://github.com/infinityab/Rasptimer-Solar-Timer-Scheduler.git rasptimer
+    sudo git clone https://github.com/infinityab/Solar-IOT.git rasptimer
     touch /var/log/rasptimer.log
     chown www-data /var/log/rasptimer.log, config.php and config2.php
     sudo echo www-data > /etc/at.allow
 
-then using vi or nano enter your Raspberry Pi input/output configuration by editing vi rasptimer/config.php and the schedules /rasptimer/config2.php - you should just have to set names and pins you want to use and your timer program entries will do the rest.
+then using Vi or preferably NANO editor enter your Raspberry Pi input/output configuration first switching to the /var/www/rasptimer directory and edit e.g. sudo nano config.php, and the schedules, config2.php - you should just have to set names and pins you want to use and your timer program entries will do the rest DO NOT alter the structure of the files other than reducing the amount of lines. Once you have created and tested the config files make backup copies of them for 'just in case'.
 
-If you have an SMA solar inverter installed and you are using SBFspot to gather the SMA data you can also display this and apply as auto power management to the timer - to do so set up a 2 and 5 minute cron job - type sudo crontab -e     ...and then add the line
+If you have an SMA solar inverter installed and you are using SBFspot to gather the SMA data you can also display this and apply as auto power management to the timer - to do so set up a 3 and 5 minute cron job - type sudo crontab -e     ...and then add the line
 
-*/2 6-20 * * * /home/pi/scripts/power-check.sh > /dev/null
-*/5 6-23 * * * /home/pi/scripts/SBFspot.sh > /dev/null
+*/3 6-20 * * * /home/pi/scripts/power-check.sh > /dev/null
+*/5 0-23 * * * /home/pi/scripts/SBFspot.sh > /dev/null
+*/5 * * * * sudo /home/pi/scripts/wifi-monitor.sh > /dev/null
 
-This will generate a curtailed logfile which the instananeous inverter power data is extracted from for display. Make sure you put the SBFspot.sh file and power-check.sh file in the /home/pi/scripts folder
+This will generate a curtailed logfile which the instananeous inverter power data is extracted from for display. Make sure you put the SBFspot.sh, power-check.sh and wifi-monitor.sh files in the /home/pi/scripts folder
 
  - then visit
 
