@@ -1,4 +1,4 @@
-Solar Timer Scheduler
+Solar IOT
 =========
 
 Use Raspberry Pi as a controller for Auto or Timer switching with choices of activation using WiFi, Wireless and/or Contacter relay, monitored and configurable over your local network by PC, tablet or smartphone.
@@ -7,7 +7,7 @@ This was originally based on the Rasptimer pool timer project conceived by Johan
 
 This should run on any Linux-based OS, although installation instructions were written for raspbian. You just need Apache Server and WiringPi, PHP is used for the server side application.
 
-You can schedule appliances connected by any of the above methods to be on and off at up to 4 arbitrary times throughout any day or days of a week. Appliances may also be manually switched on and off or even suspended from running. Any appliances may be set for auto power management (APM) as well based on the amount of excess solar power available. There is a graphical log which was part of the original core with some minor changes. See screenshot examples.
+You can schedule appliances connected by any of the above methods to be on and off at up to 5 arbitrary times throughout any day or days of a week. Appliances may also be manually switched on and off or suspended from running. Any appliances may be set for auto power management (APM) as well which will operate when there is any excess solar power available. There is also a graphical log which was part of the original core with some minor changes. See screenshot examples.
 
 SMA Inverter solar data and actual total power consumption from the electricity meter may also extracted and displayed on the timer for APM.
 
