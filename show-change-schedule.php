@@ -35,6 +35,7 @@ if( isset( $_GET[$postPar]) && $_GET[$postPar] != '+Bump' && $_GET[$postPar] != 
        <option value="2">Schedule 2</option>
        <option value="3">Schedule 3</option>
        <option value="4">Schedule 4</option>
+       <option value="5">Schedule 5</option>
       </select> <font color='blue'><b> <<< Select Schedule</b></font> 
    </p>
      <p>When run, run at

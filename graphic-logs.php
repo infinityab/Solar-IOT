@@ -7,6 +7,7 @@ require_once( 'template.php' );
 ?>
 <html>
  <head>
+<meta http-equiv="refresh" content="180">
 <?php emitHtmlHead( $title . " &mdash; Logs" ); ?>
  </head>
  <body>

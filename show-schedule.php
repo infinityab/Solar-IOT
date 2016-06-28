@@ -1,32 +1,35 @@
 
 <meta http-equiv="refresh" content="45">
-<p style="font-size:20px">
+<style="font-size:20px">
 
 <?php
     startPhp();     // check for first start
     $space="";      // dummy
     $poweravailable = getSmaPower();
     if(!$poweravailable) $poweravailable = getSmaPower();      // try again if zero or null
+
 ?>
     <form method="GET">
-    <table class="schedule">
+    <table class="schedule" width="1200";>
 <?php
     $schedule = readCrontab();
     $Schedule = checkSchedules( $schedule );  // check and bump schedules if necessary
     writeCrontab($Schedule);
     $pass = 1;
+    set_time_limit(3);
     $j = strip_tags(file_get_contents($wifiget."4"));    //  eg 192.168.x.x/gpio/0" defined in config from meter server
 //    $res = checkPowerTargets($j);   // check for any power changes and action
     reset($devices);
     $firstKey = key($devices);              // get first element so we only print 'schedule' once
     foreach( $devices as $deviceName => $devicePin ) {
+      if ( $deviceName <> "Cntl Off-Peak") {       // we don't want to print Off-Peak its only used for graphics
 ?>
      <tr>
      <td><b><?php print( $deviceName ) ?></b><font color='grey'> active schedule:</font></td>
      <td>
 <?php
         if( isset( $schedule[$deviceName]['timeOn'] )) {
-            printf( "%02d:%02d:00 for %02d:%02d:00",
+            printf( "%02d:%02d for %02d:%02d",
                     $schedule[$deviceName]['timeOn']['hour'],
                     $schedule[$deviceName]['timeOn']['min'],
                     $schedule[$deviceName]['duration']['hour'],
@@ -52,23 +55,26 @@
         } elseif ( $pass == 3) {
             print "Power Lag : ".$powerReserve." Watts";
         }  elseif ( $pass == 4) {
+/*        set_time_limit(2);
         $j = strip_tags(file_get_contents($wifigetw."6"));
             print $j;
         } elseif ( $pass == 5) {
+        set_time_limit(2);
         $j = strip_tags(file_get_contents($wifigetw."7"));
             print $j;
         } elseif ( $pass == 6) {
+        set_time_limit(2);
         $j = strip_tags(file_get_contents($wifigetw."8"));
             print $j;
-        }
-        ++$pass;
+*/        }
+
+      ++$pass;
+      }
     }
 ?>
-<p style="font-size:18px"></b>
-
-</b></tr>
-   </table>
-
-  </form>
+   <style="font-size:18px"></b>
+   </tr>
+ </table>
+</form>
 
 

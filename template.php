@@ -31,8 +31,8 @@ function emitHeader( $title ) {
 function emitFooter() {
 ?>
   <div class="footnote">
-   <p>Licensed under <a href="LICENSE">GPLv3</a>.
-      More info: <a href="https://github.com/infinityab/Solar-Timer-Scheduler">https://github.com/infinityab/Solar-Timer-Scheduler</a>.</p>
+   Licensed under <a href="LICENSE">GPLv3</a>.
+      More info: <a href="https://github.com/infinityab/Solar-IOT">https://github.com/infinityab/Solar-IOT</a>.</p>
   </div>
 <?php
 }

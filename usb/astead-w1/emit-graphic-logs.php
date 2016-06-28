@@ -1,6 +1,6 @@
 <?php
-$barHeight       = 20; // px
-$barWidthPerHour = 51; // must be the same as in the CSS file, plus 1 for the border
+$barHeight       = 10; // px
+$barWidthPerHour = 24; // must be the same as in the CSS file, plus 1 for the border
 ?>
 <style>
 div.graphic-log td,
@@ -59,7 +59,7 @@ if( $logFh ) {
         print( "<span style=\"left: ${left}px; width: ${width}px;\" class=\"d${deviceIndex}\"></span>\n" );
         if( $dotdotdot ) {
             $both = $left + $width;
-            print( "<span style=\"left: ${both}px;\" class=\"d${deviceIndex} dotdotdot\">...</span>" ); // \n" );
+            print( "<span style=\"left: ${both}px;\" class=\"d${deviceIndex} dotdotdot\">...</span>\n" );
         }
     }
 
@@ -162,17 +162,8 @@ if( !isset( $parsedLine ) || !$parsedLine ) {
 <?php
 }
 ?>
-   <tr>
-    <th></th>
-<?php               // added hour legend to base graph
-    for( $i=0 ; $i<24 ; ++$i ) {
-        print( "    <th class=\"h\">$i</th>\n" );
-    }
-?>
-   </tr>
   </tbody>
  </table>
-
 <?php
 if( isset( $parsedLine ) && $parsedLine ) {
 ?>
@@ -184,7 +175,7 @@ if( isset( $parsedLine ) && $parsedLine ) {
         ++$deviceIndex;
     }
 ?>
-</div><p>
+</div>
 <?php
 }
 require( 'emit-current-time.php' );

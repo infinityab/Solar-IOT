@@ -1,13 +1,13 @@
 Solar Timer Scheduler
 =========
 
-Use Raspberry Pi as a schedulable timer for GPIO hardware, configurable over the web by PC, tablet or smartphone.
+Use Raspberry Pi as a controller for Auto or Timer switching with choices of activation using WiFi, Wireless and/or Contacter relay, monitored and configurable over your local network by PC, tablet or smartphone.
 
-This uses the core software for the original Rasptimer pool timer project conceived by Johannes Ernst and described at http://upon2020.com/blog/2012/12/my-raspberry-pi-pool-timer-why/ with my further major additions in this version to make it a fully fledged multi-schedule timer with auto power management in solar applications for as many appliances/devices as there are Pi GPIO ports available.
+This was originally based on the Rasptimer pool timer project conceived by Johannes Ernst and described at http://upon2020.com/blog/2012/12/my-raspberry-pi-pool-timer-why/. It uses the core of this with major additions in this version to make it a fully fledged multi-schedule timer controller with auto power management for solar applications. It can control as many appliances/devices as there are Pi GPIO ports available, so at least a minimum of 8 appliances.
 
 This should run on any Linux-based OS, although installation instructions were written for raspbian. You just need Apache Server and WiringPi, PHP is used for the server side application.
 
-You can schedule devices connected or allocated to any GPIO pin to be on and off at up to 4 arbitrary times throughout any day or days of a week. Devices/appliances may also be manually switched on and off and the timers may also be nudged or bumped in 15 minute steps if required or even suspended from running. Any device(s) may be set for auto power management (APM) and provision is also made for WiFi and Wireless operated devices. There is a textual log, and graphical log. See also directory screenshots.
+You can schedule appliances connected by any of the above methods to be on and off at up to 4 arbitrary times throughout any day or days of a week. Appliances may also be manually switched on and off or even suspended from running. Any appliances may be set for auto power management (APM) as well based on the amount of excess solar power available. There is a graphical log which was part of the original core with some minor changes. See screenshot examples.
 
 SMA Inverter solar data and actual total power consumption from the electricity meter may also extracted and displayed on the timer for APM.
 
