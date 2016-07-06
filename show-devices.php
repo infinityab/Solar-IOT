@@ -174,23 +174,29 @@ timer = setInterval(function() {
         $poweravailable = getSmaPower();
 ?>
 
-   <td><b><? print "Solar Surplus : ".$j." Watts".$res;?></b><td>
-   <b><?  print ('Auto Time : '.$autoOn.":00 to ".$autoOff.":00");?></b>
+   <td><b><? print "Solar Surplus : ".$j." Watts".$res;?></b>
+    <td><b>Auto On : <input type="text" size="2" maxlength="2" name="autoOn"
+            value="<?php print(  $autoOn ) ?>"/> Start time</b>
 
 <?/*      set_time_limit(6);
         $j = strip_tags(file_get_contents($wifigetw."6")); // weather station if used
         print "Temperature : ".$j; */ ?>
 <td></td>
 <tr>
-    <td><b>Solar Power : <? print ($poweravailable*1000)." Watts" ?></b><td>
-    <b><? print 'Auto ignored outside of the above hours';?></b>
+    <td><b>Solar Power : <? print ($poweravailable*1000)." Watts" ?></b>
+       <td><b>Auto Off : <input type="text" size="2" maxlength="2" name="autoOff"
+            value="<?php print(  $autoOff ) ?>"/> Finish</b>
+
+<!--    <b><? print 'Auto ignored outside of the above hours';?></b> -->
 <?    /*  set_time_limit(6);
         $j = strip_tags(file_get_contents($wifigetw."7")); // barometric pressure
         print "Pressure : ".$j;  */ ?>
 <td></td>
 <tr>
     <td><b>Power Lag : <input type="text" size="4" maxlength="4" name="powerreserve"
-            value="<?php print(  $powerReserve ) ?>"/> Watts</b><td>
+            value="<?php print(  $powerReserve ) ?>"/> Watts</b>
+    <td><b><?  print ('Auto Time : '.$autoOn.":00 to ".$autoOff.":00");?></b>
+
 <? /*     set_time_limit(6);
         $j = strip_tags(file_get_contents($wifigetw."8"));   // humdity
         print "Humidity : ".$j; */  ?>

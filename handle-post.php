@@ -11,13 +11,13 @@
         if( isset( $_POST[$actionPar] )) {
             $turnOn = $_POST[$actionPar] == 'Turn on';
             runGpio( "write", $devicePin[0], $turnOn ? "1" : "0" );
-//            logEvent($devicePin[0], $turnOn ? "1" : "0" );
             if( isset( $_POST[$durationPar] ) && $_POST[$durationPar] ) { # something other than 0
                 issueAt( $deviceName, $_POST[$durationPar], $turnOn ? "0" : "1" );
             }
         }
 	$ConfigPar = $devicePin[0] . '-Config';
-	if(isset( $_POST[$ConfigPar] ) && $_POST[$ConfigPar]) {
+    $rewrite_config = False;
+    if(isset( $_POST[$ConfigPar] ) && $_POST[$ConfigPar]) {
 		$rewrite_config = True;
 		$configSubmit = True;
 	}
@@ -29,11 +29,17 @@
     }
     $powerReserve = $_POST['powerreserve'];
     if ($powerReserve == "") $powerReserve = 0;  // check for null
+    $autoOn = $_POST['autoOn'];
+    if ($autoOn == "") $autoOn = 0;  // check for null
+    $autoOff = $_POST['autoOff'];
+    if ($autoOff == "") $autoOff = 0;  // check for null
+
+
     if ($rewrite_config) {
-	$source = "config.php";
-	$target = "configbkup.php";
-	$handle = fopen($source, 'r');
-	$handle_out = fopen($target, 'w');
+       	$source = "config.php";
+	    $target = "configbkup.php";
+	    $handle = fopen($source, 'r');
+	    $handle_out = fopen($target, 'w');
 
 	if ($handle) {
 	    while (($line = fgets($handle)) !== false) {
@@ -222,6 +228,12 @@
 
 		} elseif (substr($line,0,13) == '$powerReserve') {
                     fwrite($handle_out, "\$powerReserve = " . $powerReserve . ";\n");
+                }
+          elseif (substr($line,0,7) == '$autoOn') {
+                    fwrite($handle_out, "\$autoOn = " . $autoOn . ";\n");
+                }
+          elseif (substr($line,0,8) == '$autoOff') {
+                    fwrite($handle_out, "\$autoOff = " . $autoOff . ";\n");
                 } else {
                     fwrite($handle_out, $line);
 		    }

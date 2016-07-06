@@ -32,7 +32,7 @@ function emitFooter() {
 ?>
   <div class="footnote">
    Licensed under <a href="LICENSE">GPLv3</a>.
-      More info: <a href="https://github.com/infinityab/Solar-IOT">https://github.com/infinityab/Solar-IOT</a>.</p>
+      More info: <a href="https://github.com/infinityab/Solar-IOT">https://github.com/infinityab/Solar-IOT</a></p>
   </div>
 <?php
 }

@@ -405,7 +405,7 @@ function runGpio( $cmd, $pin, $args = '' ) {
         if( $cmd == "cron-write") {
             $cmd = "write";         // NOT Dow or Suspend NOT Auto outside of Auto hours
             if ( !$devicePin[$thisdate+5+$offset] || $devicePin[4+$offset] || 
-              ($devicePin[1] && (($dateNow > ($autoOn * 60)) && ($dateNow < ($autoOFF * 60))))) {   // Auto within hours set
+              ($devicePin[1] && (($dateNow > ($autoOn * 60)) && ($dateNow < ($autoOff * 60))))) {   // Auto within hours set
                 $run_today = False;             // suspend or day of week suspend using offset into dow array + todays day
                 $breaknow = False;
             } else {
