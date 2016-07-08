@@ -161,10 +161,14 @@ function getSmaPower() {
 
 function checkPowerTargets($currentpower) {
 
-    global $devices,$schedules;
+  global $devices,$schedules;
 
-    include( 'config.php');
-    include( 'config2.php');
+  include( 'config.php');
+  include( 'config2.php');
+  $timeNow = (date("H")*60) + date("i");      // get the current time in minutes
+    if (($timeNow > (($autoOnhr * 60)+$autoOnmin)) && ($timeNow < (($autoOffhr * 60)+$autoOffmin)))  // check if in Auto Time Range 
+    {
+    if ($timeNow > (($autoOffhr*60)+$autoOffmin-6)) $currentpower = -5000; // if Auto Time is 6 mins from end switch OFF all auto devs
     $a = $currentpower." ";
     $b = $currentpower." ";
     $ss = count($schedules);
@@ -172,7 +176,6 @@ function checkPowerTargets($currentpower) {
     $devicelog = array();               // reset everything
     $totp = 0;
     $totd = 0;
-    $timeNow = (date("H")*60) + date("i");      // get the current time in seconds
     $sp = "* * *";
     foreach( $devices as $deviceName => $devicePin ) {      // first calculate power wattage left
         $status = NULL;
@@ -287,9 +290,11 @@ $d = $currentpower." ";
             }
         }
     }
+ }   // datenow test
+
 //  $k = " cr".$b."crp".$c."rm".$d;   / test function
-// return $k;
- return "1";  // just a dummy value
+ return $a;
+// return "1";  // just a dummy value
 }
 
 function checkSchedules(array $nextSchedule ) {
@@ -405,8 +410,8 @@ function runGpio( $cmd, $pin, $args = '' ) {
         if( $cmd == "cron-write") {
             $cmd = "write";         // NOT Dow or Suspend NOT Auto outside of Auto hours
             if ( !$devicePin[$thisdate+5+$offset] || $devicePin[4+$offset] || 
-              ($devicePin[1] && (($dateNow > ($autoOn * 60)) && ($dateNow < ($autoOff * 60))))) {   // Auto within hours set
-                $run_today = False;             // suspend or day of week suspend using offset into dow array + todays day
+              ($devicePin[1] && ($dateNow > (($autoOnhr * 60)+$autoOnmin)) && ($dateNow < (($autoOffhr * 60)+$autoOffmin)))) {
+                $run_today = False; // within Auto range OR suspend OR day of week
                 $breaknow = False;
             } else {
                   $schedules["Schedule-1"][$deviceName][1] = 1; // set running bit - dont think this is used any more

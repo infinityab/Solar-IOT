@@ -15,10 +15,11 @@ timer = setInterval(function() {
         document.getElementById('status').innerText = 'Skip Refresh';
     }
     resetTimer = false;
-},300000);
+},60000);
 </script>
 <?php
     $day = date("N");
+    $timeNow = (date("H")*60) + date("i");
     foreach( $schedules as $scheduleNums => $scheduleKey ) {  // populate Schedules
        foreach( $scheduleKey as $deviceNames => $devicePins ) {
        }
@@ -175,19 +176,22 @@ timer = setInterval(function() {
 ?>
 
    <td><b><? print "Solar Surplus : ".$j." Watts".$res;?></b>
-    <td><b>Auto On : <input type="text" size="2" maxlength="2" name="autoOn"
-            value="<?php print(  $autoOn ) ?>"/> Start time</b>
+    <td><b>Auto On : <input type="text" name="autoOnhr"
+            value="<? printf( "%02d", $autoOnhr ); ?>" size="2" maxlength="2"/>
+        :  <input type="text" name="autoOnmin"
+            value="<? printf( "%02d", $autoOnmin ); ?>" size="2" maxlength="2"/> Start Time</b>
 
-<?/*      set_time_limit(6);
+<? /*      set_time_limit(6);
         $j = strip_tags(file_get_contents($wifigetw."6")); // weather station if used
         print "Temperature : ".$j; */ ?>
 <td></td>
 <tr>
     <td><b>Solar Power : <? print ($poweravailable*1000)." Watts" ?></b>
-       <td><b>Auto Off : <input type="text" size="2" maxlength="2" name="autoOff"
-            value="<?php print(  $autoOff ) ?>"/> Finish</b>
+       <td><b>Auto Off : <input type="text" name="autoOffhr"
+            value="<? printf( "%02d", $autoOffhr ); ?>" size="2" maxlength="2"/>
+        :  <input type="text" name="autoOffmin"
+            value="<? printf( "%02d", $autoOffmin ); ?>" size="2" maxlength="2"/> Finish</b>
 
-<!--    <b><? print 'Auto ignored outside of the above hours';?></b> -->
 <?    /*  set_time_limit(6);
         $j = strip_tags(file_get_contents($wifigetw."7")); // barometric pressure
         print "Pressure : ".$j;  */ ?>
@@ -195,7 +199,10 @@ timer = setInterval(function() {
 <tr>
     <td><b>Power Lag : <input type="text" size="4" maxlength="4" name="powerreserve"
             value="<?php print(  $powerReserve ) ?>"/> Watts</b>
-    <td><b><?  print ('Auto Time : '.$autoOn.":00 to ".$autoOff.":00");?></b>
+    <td><b>
+        <? print ("Auto Time : ");  // check if in Auto Time range -1
+           print( ($timeNow > (($autoOnhr * 60)+$autoOnmin) &&
+              $timeNow < (($autoOffhr * 60)+$autoOffmin)) ? "<font color='red'>On</font>" : "<font color='blue'>Off</font>" ); ?></b>
 
 <? /*     set_time_limit(6);
         $j = strip_tags(file_get_contents($wifigetw."8"));   // humdity
@@ -209,5 +216,7 @@ timer = setInterval(function() {
 </tr></table><br><br><br><br>
 </form>
 <?
-//  var_dump($GLOBALS);  // for debug
+// $a=checkPowerTargets(-200);
+//  var_dump($a);  // for debug
 ?>
+

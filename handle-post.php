@@ -29,11 +29,14 @@
     }
     $powerReserve = $_POST['powerreserve'];
     if ($powerReserve == "") $powerReserve = 0;  // check for null
-    $autoOn = $_POST['autoOn'];
-    if ($autoOn == "") $autoOn = 0;  // check for null
-    $autoOff = $_POST['autoOff'];
-    if ($autoOff == "") $autoOff = 0;  // check for null
-
+    $autoOnhr = ltrim($_POST['autoOnhr'],'0');
+    if ($autoOnhr == "") $autoOnhr = 0;  // check for null
+    $autoOnmin = ltrim($_POST['autoOnmin'],'0');
+    if ($autoOnmin == "") $autoOnmin = 0;  // check for null
+    $autoOffhr = ltrim($_POST['autoOffhr'],'0');
+    if ($autoOffhr == "") $autoOffhr = 0;  // check for null
+    $autoOffmin = ltrim($_POST['autoOffmin'],'0');
+    if ($autoOffmin == "") $autoOffmin = 0;  // check for null
 
     if ($rewrite_config) {
        	$source = "config.php";
@@ -228,13 +231,19 @@
 
 		} elseif (substr($line,0,13) == '$powerReserve') {
                     fwrite($handle_out, "\$powerReserve = " . $powerReserve . ";\n");
+                }   // check and update Power Lag in config file
+          elseif (substr($line,0,9) == '$autoOnhr') {
+                    fwrite($handle_out, "\$autoOnhr = " . $autoOnhr . ";\n");
                 }
-          elseif (substr($line,0,7) == '$autoOn') {
-                    fwrite($handle_out, "\$autoOn = " . $autoOn . ";\n");
+          elseif (substr($line,0,10) == '$autoOnmin') {
+                    fwrite($handle_out, "\$autoOnmin = " . $autoOnmin . ";\n");
+                }   // check and update Auto On time variable in config file
+          elseif (substr($line,0,10) == '$autoOffhr') {
+                    fwrite($handle_out, "\$autoOffhr = " . $autoOffhr . ";\n");
                 }
-          elseif (substr($line,0,8) == '$autoOff') {
-                    fwrite($handle_out, "\$autoOff = " . $autoOff . ";\n");
-                } else {
+          elseif (substr($line,0,11) == '$autoOffmin') {
+                    fwrite($handle_out, "\$autoOffmin = " . $autoOffmin . ";\n");
+                } else {    // check and update Auto Off time variable in config file
                     fwrite($handle_out, $line);
 		    }
         }

@@ -6,8 +6,8 @@
 
 $schedules = array(
   "Schedule-1" => array(
-    "Hot Water Main" => array(6,1,1,11,0,6,0),
-    "Pool Pump" => array(5,0,0,8,40,8,0),
+    "Hot Water Main" => array(6,1,1,11,0,7,0),
+    "Pool Pump" => array(5,0,1,2,0,3,0),
     "Enviro Pump" => array(10,0,1,9,10,7,10),
     "Wireless Skt1" => array(11,0,1,9,0,9,0),
     "Wireless Skt2" => array(3,0,1,9,0,9,0),
@@ -39,7 +39,7 @@ $schedules = array(
     "Cntl Off-Peak" => array(7,0,0,0,0,0,0),
     ),
   "Schedule-4" => array(
-    "Hot Water Main" => array(6,0,1,15,0,2,30),
+    "Hot Water Main" => array(6,0,1,14,40,2,30),
     "Pool Pump" => array(5,0,1,3,0,1,30),
     "Enviro Pump" => array(10,0,0,8,30,0,1),
     "Wireless Skt1" => array(11,0,1,14,39,0,1),
@@ -51,7 +51,7 @@ $schedules = array(
     ),
   "Schedule-5" => array(
     "Hot Water Main" => array(6,0,1,6,30,0,18),
-    "Pool Pump" => array(5,0,1,3,0,1,30),
+    "Pool Pump" => array(5,0,1,3,0,1,29),
     "Enviro Pump" => array(10,0,0,8,30,0,1),
     "Wireless Skt1" => array(11,0,1,14,39,0,1),
     "Wireless Skt2" => array(3,0,0,11,0,1,0),

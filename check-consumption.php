@@ -24,7 +24,7 @@
   curl_setopt($ch,CURLOPT_POST, 1);                // 0 for a get request
   curl_setopt($ch,CURLOPT_POSTFIELDS,$postvars);
   curl_setopt($ch,CURLOPT_HTTPHEADER, array(
-    "X-Pvoutput-Apikey: b48740f4f30a7be6b44ca821f75554b2c28eea37", "X-Pvoutput-SystemId: 40003"));
+    "X-Pvoutput-Apikey: your key", "X-Pvoutput-SystemId: 40003"));
   curl_setopt($ch,CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch,CURLOPT_CONNECTTIMEOUT ,3);
   curl_setopt($ch,CURLOPT_TIMEOUT, 20);
@@ -40,6 +40,6 @@
   }
 //  print "curl response is:" . $response;
 // $d="d=20160323";   // example - direct CURL command to PVoutput
-// $result = exec('curl "http://pvoutput.org/service/r2/addstatus.jsp" -H "X-Pvoutput-Apikey: b48740f4f30a7be6b44ca821f75554b2c28eea37" -H "X-Pvoutput-SystemId: 40003" -d "d=20160324" -d "t=07:45" -d "v4=110" -0');
+// $result = exec('curl "http://pvoutput.org/service/r2/addstatus.jsp" -H "X-Pvoutput-Apikey: your key" -H "X-Pvoutput-SystemId: 40003" -d "d=20160324" -d "t=07:45" -d "v4=110" -0');
 
 ?>
