@@ -24,8 +24,8 @@ The signals from the Pi are opposite to that required by the relay board to main
 A 74HFC04 is recommended for this which has 6 inverters and can be powered directly from the pi at 3V. The relay board requires 5v.<p>
 <p class="ex2">The Contactors may be any type suitable for your requirements but bear in mind amperage quoted is always for resistive loads 
 you need to triple the required amperage for inductive loads, so a 1.5HP motor would probably need a 25A Contactor. A manual overide on the contactor would also be extremely useful.
-<p class="ex2">The Wireless WiFi AC socket outlets are just ordinary commercial units available from hardware stores and plug into existing sockets. The Pi 
-will directly drive 433Mhz transmitters located in WiFi clientside units via WiFi command.
+<p class="ex2">The Wireless RC power sockets are just ordinary commercial units available from hardware stores and plug into existing sockets. The trigger codes are discovered using the RCSwitch utility as described on github. The Pi 
+will directly drive 433Mhz transmitters located in WiFi clientside units via WiFi command. Or a central Wifi-Wireless unit can be installed in the house if a good range can be acheived.
 <p class="ex2">
 Wifi Clientside units consist of a WiFi SOC (ESP8266) and a 2 or 4 channel relay board plus an optional 433Mhz transmitter to retransmit wifi-wireless commands to sockets. Typically a WiFi unit would be used to switch Air Conditioners, lights etc, wireless sockets would be used for any appliance that has a plug such as heaters etc. 
 <p class="ex2"> 

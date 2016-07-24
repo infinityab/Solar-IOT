@@ -6,9 +6,6 @@ require_once( 'functions.php' );
 require_once( 'decode-url.php' );
 startPhp();     // check if first run
 
-// $json_string = file_get_contents("http://192.168.0.117/digital/1/1/"); // reset ESP wifi servers
-// $json_string = file_get_contents("http://192.168.0.118/digital/1/1/");
-$prevpower = "";
 if( $_POST ) {
     require_once( 'handle-post.php' );
 }

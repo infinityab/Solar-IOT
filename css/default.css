@@ -187,16 +187,16 @@ div.graphic-log div.bar > span.d8 {
 /* possibly add colors for more devices */
 
 #pv_title {             /* following is for additional graph and data infos on configure page */
-   font-size: 0; // 1.25em;
+   font-size: 0.0em;
 }
 
 #pv_energy_label, #pv_power_label, #pv_gss_label, #pv_temperature_label, #pv_voltage_label {
    font-weight: bold;
-   font-size: 0.8em; // 1.05em
+   font-size: 0.875em;
 }
 
 #pv_timestamp {
    padding-top: 5px;
-   font-size: 14px;
+   font-size: 0.875em;
 } 
 
