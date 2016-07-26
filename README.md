@@ -24,7 +24,7 @@ For Solar users - If you have installed the Power Meter project to constantly up
 
 Power Lag Configuration - this is basically the OFF hysterisis of the power calculation. So after making an allowance of say 500W for appliances like fridges, deep freeze which you have no control over, etc if the appliance that is ON is using say 2400W and the the Lag is 500W then the power calculation to switch the appliance OFF is 2900W. So if the consumption suddenly rises by say 300W due to a fridge starting up then there will still be enough power in the calculation to keep the appliance ON thus reducing the possible yoyoing OFF-ON-OFF-ON effect.
 ___
-###The Main Software Modules - for reference or modification
+###The Main Software Modules - for reference
 
 Crontab - holds all the timed calls (SBFspot, Check-Power etc)
 
