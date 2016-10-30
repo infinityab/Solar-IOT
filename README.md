@@ -68,13 +68,12 @@ Firstly make an image of your existing SD/TF card memory using the free WinDskMg
     sudo apt-get update
     sudo apt-get install libapache2-mod-php5 git at
     cd ~
-    git clone https://github.com/WiringPi/WiringPi.git
+    sudo apt-get install git-core
+    git clone git://git.drogon.net/wiringPi
     cd WiringPi/wiringPi
-    make
-    sudo make install
-    cd ../gpio
-    make
-    sudo make install
+    Switch to the resulting wiringPi directory and use the ./build command to compile and install Wiring Pi:
+    cd wiringPi
+    ./build
     cd /var/www
     sudo git clone https://github.com/infinityab/Solar-IOT.git rasptimer
     touch /var/log/rasptimer.log
