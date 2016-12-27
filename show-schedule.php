@@ -21,7 +21,7 @@
         if ( $deviceName <> "Cntl Off-Peak" ) { // we don't want to print Off-Peak its only used for graphics ?>
     <tr>
       <td><b><?php
-            print( $deviceName ); ?></b><font color='grey'> schedule now :</font></td>
+            print( $deviceName ); ?></b><font color='grey'> live schedule :</font></td>
       <td>
         <?php
             if ( isset( $schedule[$deviceName]['timeOn'] ) ) {

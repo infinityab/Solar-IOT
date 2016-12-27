@@ -18,7 +18,7 @@
           document.getElementById('status').innerText = 'Skip Refresh';
       }
       resetTimer = false;
-  },60000);
+  },180000);
 </script>
 <?php
   $day = date("N");
@@ -35,14 +35,15 @@
   <table class="status">
     <tr>
       <th align="left"><font color='grey'>Appliances</th>
-      <th align="left"><font color='grey'>Pin</th>
-      <th><font color='grey'>Status</th>
+      <th align="left"><font color='grey'>State</th>
+      <th align="center"><font color='grey'>Port</th>
+      <th><font color='grey'>Overide</th>
       <th><font color='grey'>Scheduled For</th>
       <th><font color='grey'>Trigger</th>
       <th><font color='grey'>Power</th>
       <th><font color='grey'>Auto</th>
       <th><font color='grey'>Susp</th>
-      <th align="left"><font color='grey'>Schedule <?php
+      <th align="left"><font color='grey'> Schedule <?php
         print (($devices[$deviceNames][2]) + 1) ?></th>
       <th><font color='grey'>Mon</th>
       <th><font color='grey'>Tue</th>
@@ -60,11 +61,15 @@
         ?>
       <th align="left"><?php
         print ($deviceName) ?></th>
-      <td><?php
-        print ($devicePin[0]) ?></th><?php
-        $deviceStatus = exec("/usr/local/bin/gpio read $devicePin[0]"); ?>
-      <td><?php
+      <td>
+      <?php  $deviceStatus = exec("/usr/local/bin/gpio read $devicePin[0]");
         print ($deviceStatus ? "<font color='red'>On</font>" : "<font color='blue'>Off</font>"); ?>
+      </td>
+      <td><? print($devicePin[0]) ?></td>
+      <td>
+        <input type="submit" name="<?php        // manual Overide
+            print( $deviceName ); ?>Action" value="<?php
+            print( $deviceStatus ? "Turn off" : "Turn on" ); ?>"/>
       </td>
       <td>
         <?php
@@ -169,6 +174,7 @@
       <td></td>
       <td></td>
       <td></td>
+      <td></td>
       <td>View</td>
       <td>
         <select name="<?php
@@ -187,7 +193,7 @@
   </table>
   <p>
 
-<?php   // test PVoutput first before grabbing graphs otherwise page will jam
+<?php   // test PVoutput first before grabbing graphs otherwise page will jam if site is down
     $url = 'http://pvoutput.org';
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_HEADER, true);
@@ -215,7 +221,17 @@
       <script src="http://pvoutput.org/widget/outputs.jsp?sid=40003&h=100&barwidth=11&barspacing=2&c=2&n=1"></script>
     </td>
   </table>
-  <p>
+    <p>
+
+  <table class="status" width="300" border="0" align="left" cellpadding="0" cellspacing="0" style="margin-right:10px";>
+    <td>
+    <object width="290" height="130"><param name="movie"
+        value="http://www.wunderground.com/swf/pws_mini_rf_nc.swf?station=ITAREE3&freq=&units=metric&lang=EN" />
+    <embed src="http://www.wunderground.com/swf/pws_mini_rf_nc.swf?station=ITAREE3&freq=&units=metric&lang=EN"
+        type="application/x-shockwave-flash" width="290" height="130" /></object>
+    </td>
+
+</table>
   <table class="status" width="300" border="0" align="left" cellpadding="0" cellspacing="0" style="margin-right:10px";>
     <td>
       <script src="http://pvoutput.org/portlet/r1/getstatus.jsp?sid=40003"></script>
@@ -225,28 +241,22 @@
 <? } // ends conditional PVoutput test to prevent page jam
 ?>
 
-  <table class="status" width="900" border="0" align="left" cellpadding="0" cellspacing="0"; >
+  <table class="status" width="600" border="0" align="left" cellpadding="0" cellspacing="0"; >
+
       <?php
       set_time_limit(6);
       $j = strip_tags(file_get_contents($wifiget . "4")); // get the solar export/import
       $poweravailable = getSmaPower();
       ?>
-    <td><b><?php
-      print "Solar Surplus : " . $j . " Watts" . $res; ?></b>
-    <td><b>Auto On &nbsp;&nbsp; : <input type="text" name="autoOnhr"
-      value="<?php
+    <td><b>Solar Surplus : <?php
+        print $j . " Watts" . $res ?>
+   <td><b>Auto On &nbsp; &nbsp;: <input type="text" name="autoOnhr"
+      value="<?
         printf("%02d", $autoOnhr); ?>" size="2" maxlength="2"/>
       :  <input type="text" name="autoOnmin"
-        value="<?php
-          printf("%02d", $autoOnmin); ?>" size="2" maxlength="2"/> Start Time</b>
-      <b>
-    <td>
-      <?php
-        print ("<b>Auto Time : "); // check if in Auto Time range -1
-        print (($timeNow > (($autoOnhr * 60) + $autoOnmin) && $timeNow < (($autoOffhr * 60) + $autoOffmin)) ? 
-            "<font color='red'>is On</font>" : "<font color='blue'>is Off</font>");
-        ?>
-    <td></td>
+        value=" <?
+        printf("%02d", $autoOnmin); ?>" size="2" maxlength="2"/> Start Time</b>
+</td>
     <tr>
       <td><b>Solar Power : <?php
         print ($poweravailable * 1000) . " Watts" ?></b>
@@ -277,8 +287,15 @@
           $deviceStatus = exec("/usr/local/bin/gpio read 7");
           print ($deviceStatus ? "<font color='red'>On</font>" : "<font color='blue'>Off</font>"); ?>
         </td>
-    </tr>
-  </table>
+
+    <td><b>
+      <?php
+        print ("Auto Time : "); // check if in Auto Time range -1
+        print (($timeNow > (($autoOnhr * 60) + $autoOnmin) && $timeNow < (($autoOffhr * 60) + $autoOffmin)) ?
+            "<font color='red'>is On</font>" : "<font color='blue'>is Off</font>");
+        ?>
+    </td>
+</table>
   <br /><br /><br /><br /><br />
 </form>
 <?php

@@ -27,14 +27,14 @@ function wifiCheck($pin, $onoff)
     if ($pin == $wifi1[0]) { // is it a  wifi appliance
         set_time_limit(3); //        $json_string =    // use if reading return html code string
         file_get_contents($wifi1[1] . "2/0"); // downstairs Aircon
-        //        file_get_contents($wifi3[1].$onoff);   // summer only start and stop external fan for aircon boost
-        logEvent($wifi3[0], $onoff);
+        file_get_contents($wifi3[1].$onoff);   // summer only start and stop external fan for aircon boost
+        logEvent($wifi3[0], $onoff);   /// 3 = wireless 1 from main transmitter
     }
     elseif ($pin == $wifi2[0]) { // is it a wifi appliance
         set_time_limit(3);
         file_get_contents($wifi2[1] . "2/0"); // upstairs Aircon
-        //        $json_string = file_get_contents($wifi7[1].$onoff);   // to start and stop external fan for aircon boost
-        logEvent($wifi7[0], $onoff);
+        $json_string = file_get_contents($wifi4[1].$onoff);   // to start and stop external fan for aircon boost
+        logEvent($wifi4[0], $onoff);  // was 7 not 4 - same above, 4 = wireless 2
     }
     elseif ($pin == $wifi3[0]) { // wireless socket #1 only transmit 2 times
         for ($wret = 1; $wret <= 2; ++$wret) {
@@ -325,8 +325,8 @@ function checkSchedules(array $nextSchedule)
                 $nextSched = ($nextSchedule[$deviceNames]['timeOn']['hour'] * 60) + $nextSchedule[$deviceNames]['timeOn']['min'];
                     // schedTime is taken from config file nextSched is from crontab
                 if (($schedTime >= $timeNow && $on) || $nextSched >= $timeNow || exec("/usr/local/bin/gpio read $devicePins[0]"))
-                     $lastSched = False; // still some schedules left
-                if (($schedTime >= $timeNow && $on) && (($schedTime <= $nextSched && $on) || ($nextSched < $timeNow))) { // look for best time
+                     $lastSched = False; // still some schedules left       // vvv look for best time vvv
+                if (($schedTime >= $timeNow && $on) && (($schedTime <= $nextSched && $on) || ($nextSched < $timeNow))) {
                     if (!exec("/usr/local/bin/gpio read $devicePins[0]")) { // status check is slow so put here - is device running?
                         $nextSchedule[$deviceNames]['timeOn']['hour'] = strval($devicePins[3]);
                         $nextSchedule[$deviceNames]['timeOn']['min'] = strval($devicePins[4]);

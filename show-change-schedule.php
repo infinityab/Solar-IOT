@@ -2,9 +2,8 @@
 <?php
 foreach( $devices as $deviceName => $devicePin ) {
     $postPar = $deviceName . 'Action';
-    $postPar = str_replace( ' ', '_', $postPar ); // we love PHP
-    if( (isset( $_GET[$postPar] ) && $_GET[$postPar] == 'Change schedule') || 
-            (isset( $_GET[$postPar]) && ($_GET[$postPar] == '+Bump' || $_GET[$postPar] == '-Bump')))
+    $postPar = str_replace( ' ', '_', $postPar );
+    if( isset( $_GET[$postPar])  && $_GET[$postPar] == 'Change schedule' )
  {
         $foundDeviceName = $deviceName;
         $foundDevicePin  = $devicePin;
@@ -19,9 +18,10 @@ if( !isset( $foundDeviceName )) {
 ?>
 
 <?php
-if( isset( $_GET[$postPar]) && $_GET[$postPar] != '+Bump' && $_GET[$postPar] != '-Bump') {  	// bump ?
+if( isset( $_GET[$postPar]) ) {
+    print("<br><br>");
 ?>
-    <h2>Change Schedule for <?php print( $foundDeviceName )?></h2>
+    <br><h2>Change Schedule for <?php print( $foundDeviceName )?></h2>
 
     <form method="POST" class="change-schedule">
      <p>

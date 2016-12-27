@@ -12,11 +12,11 @@ if( $_POST ) {
 ?>
 <html>
  <head>
-<?php emitHtmlHead( $title ); ?>
+<?php emitHtmlHead( $title . " &mdash; Set Schedules"  ); ?>
 </html>
  </head>
  <body>
-<?php emitHeader( $title ); ?>
+<?php emitHeader( $title . " &mdash; Set Schedules" ); ?>
   <div class="body">
 <?php
 if( !isset( $devices )) {

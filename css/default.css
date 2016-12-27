@@ -1,5 +1,5 @@
 html {
-    background-image: url( ../images/solar2.jpg ); // clock.svg );
+    background-image: url( ../images/solar2.jpg );
     font-family: "Helvetica Neue", Arial;
 }
 body {
@@ -39,7 +39,7 @@ table.status th,
 table.status td,
 table.schedule th,
 table.schedule td {
-    padding: 3px 12px;  /* 5px */
+    padding: 3px 10px;  /* 5px */
 }
 
 div.footnote {
@@ -55,11 +55,12 @@ form.change-schedule input[type="text"] {
     padding: 2px;
     border-radius: 0; /* hacks to make WebKit behave on both iOS and desktop */
     border: 1px solid #d0d0d0;
-    background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(hsla(0,0%,100%,0)), to(hsla(0,0%,100%,0)));
+/*  background-image:-webkit-gradient(linear, 0% 0%, 0% 100%, from(hsla(0,0%,100%,0)), to(hsla(0,0%,100%,0)));
     background-image:-webkit-linear-gradient(hsla(0,0%,100%,0), hsla(0,0%,100%,0));
+*/
 }
 div.tabs {
-    float left;
+    float :left;
     margin: 10px 260px 10px 10px;    /*    margin: 10px 15% 10px 10px; */
 }
 div.tabs > ul {
@@ -105,7 +106,7 @@ div.graphic-log > table > * > * > th {
     text-align: center;
 }
 th.h {
-    width: 50px; // 23
+    width: 50px;
 }
 .selected {
     font-weight: bold;
@@ -124,7 +125,7 @@ div.graphic-log div.bar {
 div.graphic-log div.bar > span {
     display: block;
     position: absolute;
-    height: 22px;  // 10
+    height: 22px;
 }
 
 span.dotdotdot {
@@ -161,7 +162,7 @@ div.graphic-log div.bar > span.d0 {
     top: 0;
 }
 div.graphic-log div.bar > span.d1 {
-    top: 20px; // 10px
+    top: 20px;
 }
 div.graphic-log div.bar > span.d2 {
     top: 40px;
@@ -184,9 +185,8 @@ div.graphic-log div.bar > span.d7 {
 div.graphic-log div.bar > span.d8 {
     top: 160px;
 }
-/* possibly add colors for more devices */
 
-#pv_title {             /* following is for additional graph and data infos on configure page */
+#pv_title {
    font-size: 0.0em;
 }
 
@@ -196,7 +196,11 @@ div.graphic-log div.bar > span.d8 {
 }
 
 #pv_timestamp {
-   padding-top: 5px;
-   font-size: 0.875em;
+   padding-top: 0px;
+   font-size: 0.0em;
 } 
+/* possibly add colors for more devices */
+
+/* following is for additional graph and data infos on configure page */
+
 
