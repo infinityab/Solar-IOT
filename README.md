@@ -39,8 +39,11 @@ Config .php - holds the Solar-IOT day-to-day configuration for all the schedules
 Config2 .php - holds all the timer schedules for all the appliances
 
 SBFspot - .sh provided by SBFspot and modified to include additional consumption data -
+
 1] It Reads data from the SMA inverter and uploads to PVoutput (this is standard SBFspot software).
+
 2]A further call is made to extract raw solar power data and store in temporary log file for the Solar IOT controller to access.
+
 3] A further Call to Check-Consumption .php which reads meter data and solar data and then calculates current consumption and uploads to PVoutput.
 
 Check-Power as .sh and .php - this is used for the Auto Power function. It reads the current meter consumption and calls the checkPowerTargets function to calculate what to switch on or off.
