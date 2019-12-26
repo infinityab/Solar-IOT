@@ -83,7 +83,7 @@ Firstly make an image of your existing SD/TF card memory using the free WinDskMg
     cd /var/www
     sudo git clone https://github.com/infinityab/Solar-IOT.git rasptimer
     touch /var/log/rasptimer.log
-    chown www-data /var/log/rasptimer.log, config.php and config2.php
+    chown www-data /var/log/rasptimer.log, config.php, configbkup.php and config2.php
     sudo echo www-data > /etc/at.allow
 
 then using Vi or preferably NANO editor enter your Raspberry Pi input/output configuration first switching to the /var/www/rasptimer directory and edit e.g. sudo nano config.php, and the schedules, config2.php - you should just have to set names and pins you want to use and your timer program entries will do the rest DO NOT alter the structure of the files other than reducing the amount of lines. Once you have created and tested the config files make backup copies of them for 'just in case'.
